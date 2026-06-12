@@ -1,38 +1,12 @@
-/*
- * Assignment: Rock Paper Scissors Lizard Spock Game
+/**
  * 
- * Objective:
- * Implement a fully functional Rock Paper Scissors Lizard Spock game using Unity and C#. The player selects a choice via UI buttons, 
- * the computer randomly selects its choice, and the game determines the winner based on the game rules.
- * 
- * Requirements:
- * 1. The player can choose from five options: Rock, Paper, Scissors, Lizard, or Spock by pressing designated buttons in the scene.
- * 2. The computer randomly selects one of the five choices each turn.
- * 3. Game logic determines the winner based on the following rules:
- *    - Rock beats Scissors and Lizard
- *    - Scissors beats Paper and Lizard
- *    - Paper beats Rock and Spock
- *    - Lizard beats Paper and Spock
- *    - Spock beats Scissors and Rock
- * 4. Ties occur when both the player and computer choose the same option.
- * 5. All game results (player choice, computer choice, and outcome) should be output using Debug.Log.
- * 6. Use an enum to represent the five choices instead of strings.
- * 7. Update the OnClick() method in the editor to use enums instead of strings. 
- *      NOTE: OnClick cannot directly take enums, so what would you use instead to pass in?
- *      
- * 
- * Instructions:
- * - Attach the script to any active GameObject in your Unity scene.
- * - Change the OnClick method on the UI buttons in the scene to use enums instead of strings.
- * - Observe the game results in the Console after each button press.
- * 
- * Hint:
- * - Start by just fixing up the strings and doing Rock Paper Scissors. 
- * - Once you have that working, add in the Lizard and Spock options and update the game logic accordingly.
- * - OnClick can't take enums, but what does a compiler read enums as? Remember, casting can change one type to another. 
+ * Exercise 01 - RockPaperScissorsGame.cs
+ * Name: Ka Bo Cheung
+ * Date: 06/12/2026
+ * Course: GAME-1377-001
  *
+ *Script for the RPS Manager to identify the hand choices and determine the winner of the game
  */
-
 using UnityEngine;
 
 public class RockPaperScissorsGame : MonoBehaviour
@@ -49,24 +23,79 @@ public class RockPaperScissorsGame : MonoBehaviour
 
     private string[] choices = { "rock", "paper", "scissors", "lizard", "spock" };
 
-    public void RockPaperScissors(string playerChoice)
+    public void RockPaperScissors(int playerChoice)
     {
-        Debug.Log("You chose: " + playerChoice);
+        // Generate a random integer from 1 to 5 for the computer choice 
+        int computerChoice = Random.Range(1,6);
 
-        string computerChoice = choices[0];
-        Debug.Log("Computer chose: " + computerChoice);
+        // Display the choices from the player and the computer
+        Debug.Log("You chose: " + (Choice) playerChoice);
+        Debug.Log("Computer chose: " + (Choice) computerChoice);
 
-        if (playerChoice == "rock")
+        // A tie between the player and the computer
+        if ((Choice) playerChoice == (Choice) computerChoice)
         {
-            Debug.Log("It's a tie! Both chose " + playerChoice);
+            Debug.Log("It's a tie! Both chose " + (Choice) playerChoice);
         }
-        else if (playerChoice == "paper")
+        // Rock beats Scissors and Lizard
+        else if ((Choice) playerChoice == Choice.rock)
         {
-            Debug.Log("You win! " + playerChoice + " beats " + computerChoice);
+            if ((Choice) computerChoice == Choice.scissors || (Choice) computerChoice == Choice.lizard)
+            {
+                Debug.Log("You win! " + (Choice) playerChoice + " beats " + (Choice) computerChoice);
+            }
+            else
+            {
+                Debug.Log("You lose! " + (Choice) computerChoice + " beats " + (Choice) playerChoice);
+            }
         }
-        else
+        // Scissors beats Paper and Lizard
+        else if ((Choice)playerChoice == Choice.scissors)
         {
-            Debug.Log("You lose! " + computerChoice + " beats " + playerChoice);
+            if ((Choice)computerChoice == Choice.paper || (Choice)computerChoice == Choice.lizard)
+            {
+                Debug.Log("You win! " + (Choice)playerChoice + " beats " + (Choice)computerChoice);
+            }
+            else
+            {
+                Debug.Log("You lose! " + (Choice)computerChoice + " beats " + (Choice)playerChoice);
+            }
+        }
+        // Paper beats Rock and Spock
+        else if ((Choice)playerChoice == Choice.paper)
+        {
+            if ((Choice)computerChoice == Choice.rock || (Choice)computerChoice == Choice.spock)
+            {
+                Debug.Log("You win! " + (Choice)playerChoice + " beats " + (Choice)computerChoice);
+            }
+            else
+            {
+                Debug.Log("You lose! " + (Choice)computerChoice + " beats " + (Choice)playerChoice);
+            }
+        }
+        // Lizard beats Paper and Spock
+        else if ((Choice)playerChoice == Choice.lizard)
+        {
+            if ((Choice)computerChoice == Choice.paper || (Choice)computerChoice == Choice.spock)
+            {
+                Debug.Log("You win! " + (Choice)playerChoice + " beats " + (Choice)computerChoice);
+            }
+            else
+            {
+                Debug.Log("You lose! " + (Choice)computerChoice + " beats " + (Choice)playerChoice);
+            }
+        }
+        // Spock beats Scissors and Rock
+        else if ((Choice)playerChoice == Choice.spock)
+        {
+            if ((Choice)computerChoice == Choice.scissors || (Choice)computerChoice == Choice.rock)
+            {
+                Debug.Log("You win! " + (Choice)playerChoice + " beats " + (Choice)computerChoice);
+            }
+            else
+            {
+                Debug.Log("You lose! " + (Choice)computerChoice + " beats " + (Choice)playerChoice);
+            }
         }
     }
 }
