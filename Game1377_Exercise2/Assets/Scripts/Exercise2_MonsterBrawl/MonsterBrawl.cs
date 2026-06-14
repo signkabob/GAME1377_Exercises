@@ -28,12 +28,18 @@ public class MonsterBrawl : MonoBehaviour
         int m2Health;
         int turn;
 
-        // Monster #2 selection
-        for (int m2 = 0;  m2 < monsterNames.Length; m2++)
+        // Monster #1 selection
+        for (int m1 = 0;  m1 < monsterNames.Length; m1++)
         {
-            // Monster #1 selection; Skip used monster #1 for each iteration 
-            for (int m1 = m2; m1 < monsterNames.Length; m1++)
+            // Monster #2 selection; Skip used monster #1 for each iteration 
+            for (int m2 = m1; m2 < monsterNames.Length; m2++)
             {
+                // Monster shouldn't fight its own kind
+                if (m1 == m2)
+                {
+                    continue;
+                } 
+
                 // Initialize variables for each unique battle
                 m1Health = healthStats[m1];
                 m2Health = healthStats[m2];
@@ -69,7 +75,7 @@ public class MonsterBrawl : MonoBehaviour
                 // If monster #2 defeats monster #1...
                 else
                 {
-                    Debug.Log(monsterNames[m2] + " vs " + monsterNames[m1] + " | Winner: " + monsterNames[m2]
+                    Debug.Log(monsterNames[m1] + " vs " + monsterNames[m2] + " | Winner: " + monsterNames[m2]
                         + " | Turns: " + turn + " | Remaining HP: " + m2Health);
                 }
             }
