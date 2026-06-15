@@ -24,7 +24,9 @@ public class MonsterBrawl : MonoBehaviour
         }
 
         // Declare variables for the battle simulation
+        string monster1Name;
         int monster1Health;
+        string monster2Name;
         int monster2Health;
         int turn;
 
@@ -41,7 +43,9 @@ public class MonsterBrawl : MonoBehaviour
                 } 
 
                 // Initialize variables for each unique battle
+                monster1Name = monsterNames[monster1];
                 monster1Health = healthStats[monster1];
+                monster2Name = monsterNames[monster2];
                 monster2Health = healthStats[monster2];
                 turn = 0;
 
@@ -52,33 +56,48 @@ public class MonsterBrawl : MonoBehaviour
                     // Monster #1's turn based on its speed
                     if (turn % speedStats[monster1] == 0)
                     {
-                        monster2Health -= attackStats[monster1]; 
+                        Attack(attackStats[monster1], ref monster2Health); 
                     }
                     // Monster #2's turn based on its speed
                     if (turn % speedStats[monster2] == 0)
                     {
-                        monster1Health -= attackStats[monster2];
+                        Attack(attackStats[monster2], ref monster1Health);
                     }
                 }
 
                 // If both monsters die on the same turn...
                 if (monster1Health <= 0 && monster2Health <= 0)
                 {
-                    Debug.Log(monsterNames[monster1] + " vs " + monsterNames[monster2] + " | Draw | Turns: " + turn);
+                    DisplayResult(monster1Name, monster2Name, true, monster1Name, turn, monster1Health);
                 }
                 // If monster #1 defeats monster #2...
                 else if (monster2Health <= 0)
                 {
-                    Debug.Log(monsterNames[monster1] + " vs " + monsterNames[monster2] + " | Winner: " + monsterNames[monster1] 
-                        + " | Turns: " + turn + " | Remaining HP: " + monster1Health);
+                    DisplayResult(monster1Name, monster2Name, false, monster1Name, turn, monster1Health);
                 }
                 // If monster #2 defeats monster #1...
                 else
                 {
-                    Debug.Log(monsterNames[monster1] + " vs " + monsterNames[monster2] + " | Winner: " + monsterNames[monster2]
-                        + " | Turns: " + turn + " | Remaining HP: " + monster2Health);
+                    DisplayResult(monster1Name, monster2Name, false, monster2Name, turn, monster2Health);
                 }
             }
+        }
+    }
+    private void Attack(int damage, ref int opponentHealth)
+    {
+        opponentHealth -= damage;
+    }
+
+    private void DisplayResult(string monster1, string monster2, bool tie, string winner, int turn, int remainingHP)
+    {
+        if (tie)
+        {
+            Debug.Log(monster1 + " vs " + monster2 + " | Draw | Turns: " + turn);
+        }
+        else
+        {
+            Debug.Log(monster1 + " vs " + monster2 + " | Winner: " + winner + " | Turns: " + turn + " | Remaining HP: " + remainingHP);
+
         }
     }
 }
