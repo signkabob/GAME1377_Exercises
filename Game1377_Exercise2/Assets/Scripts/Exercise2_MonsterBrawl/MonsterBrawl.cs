@@ -85,11 +85,11 @@ public class MonsterBrawl : MonoBehaviour
     }
 
     /// <summary>
-    /// Checks if the turn number is a multiple of the monster speed
+    /// Determines whether it is time for the monster to attack
     /// </summary>
     /// <param name="turn">Number of turn</param>
     /// <param name="speed">Monster speed</param>
-    /// <returns></returns>
+    /// <returns>Checks if the turn number is a multiple of the monster speed</returns>
     private bool TimeToAttack(int turn, int speed)
     {
         if (turn % speed == 0)
