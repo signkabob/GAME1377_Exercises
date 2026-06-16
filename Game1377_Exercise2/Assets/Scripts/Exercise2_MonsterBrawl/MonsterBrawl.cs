@@ -1,7 +1,7 @@
 /**
  * Exercise 02 - MonsterBrawl.cs
  * Name: Ka Bo Cheung
- * Date: 06/15/2026
+ * Date: 06/16/2026
  * Course: GAME-1377-001
  *
  *Script for the battle simulation between monsters
@@ -53,13 +53,13 @@ public class MonsterBrawl : MonoBehaviour
                 while (monster1Health > 0 && monster2Health > 0)
                 {
                     turn++;
-                    // Monster #1's turn based on its speed
-                    if (turn % speedStats[monster1] == 0)
+                    // Monster #1's turn to attack based on its speed
+                    if (TimeToAttack(turn, speedStats[monster1]))
                     {
                         Attack(attackStats[monster1], ref monster2Health); 
                     }
-                    // Monster #2's turn based on its speed
-                    if (turn % speedStats[monster2] == 0)
+                    // Monster #2's turn to attack based on its speed
+                    if (TimeToAttack(turn, speedStats[monster2]))
                     {
                         Attack(attackStats[monster2], ref monster1Health);
                     }
@@ -83,11 +83,44 @@ public class MonsterBrawl : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// Checks if the turn number is a multiple of the monster speed
+    /// </summary>
+    /// <param name="turn">Number of turn</param>
+    /// <param name="speed">Monster speed</param>
+    /// <returns></returns>
+    private bool TimeToAttack(int turn, int speed)
+    {
+        if (turn % speed == 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Applies damage to the opponent
+    /// </summary>
+    /// <param name="damage">Damage points dealt to the opponent</param>
+    /// <param name="opponentHealth">Health points of the opponent</param>
     private void Attack(int damage, ref int opponentHealth)
     {
         opponentHealth -= damage;
     }
 
+    /// <summary>
+    /// Displays the battle result message
+    /// </summary>
+    /// <param name="monster1">Name of monster #1</param>
+    /// <param name="monster2">Name of monster #2</param>
+    /// <param name="tie">Is the battle a tie?</param>
+    /// <param name="winner">Name of the winner</param>
+    /// <param name="turn">Number of turn</param>
+    /// <param name="remainingHP">Remaining health points of the winner</param>
     private void DisplayResult(string monster1, string monster2, bool tie, string winner, int turn, int remainingHP)
     {
         if (tie)
