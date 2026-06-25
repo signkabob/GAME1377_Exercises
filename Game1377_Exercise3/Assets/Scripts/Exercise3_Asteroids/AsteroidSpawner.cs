@@ -15,6 +15,7 @@
 *       where the player will be (at least 3 units away from the center in any direction).
 *       Hint: Vector3.Distance can tell you how far one point is away from another. 
 */
+using NUnit.Framework.Internal;
 using UnityEngine;
 
 public class AsteroidSpawner : MonoBehaviour
@@ -26,6 +27,11 @@ public class AsteroidSpawner : MonoBehaviour
     private float spawnYMax = 0f;
     private float spawnYMin = 0f;
     private float playerSafeDistance = 3;
+
+    public GameObject asteroidSmallPrefab;
+    public GameObject asteroidMediumPrefab;
+    public GameObject asteroidLargePrefab;
+    private int numOfAsteroidsToSpawn = 5;
 
     void Start()
     {
@@ -45,11 +51,48 @@ public class AsteroidSpawner : MonoBehaviour
 
     private void SpawnInitialAsteroids()
     {
-        // Spawn initial asteroids at random positions. Ensure that they do not spawn where the player is located. 
+        for (int i = 0; i < numOfAsteroidsToSpawn; i++)
+        {
+            // Spawn initial asteroids at random positions. Ensure that they do not spawn where the player is located. 
+            float spawnXRandom = Random.Range(spawnXMin, spawnXMax);
+            if (spawnXRandom > 0 && spawnXRandom < playerSafeDistance)
+            {
+                spawnXRandom = playerSafeDistance;
+            }else if(spawnXRandom < 0 && spawnXRandom > -playerSafeDistance)
+            {
+                spawnXRandom = -playerSafeDistance;
+            }
+
+            float spawnYRandom = Random.Range(spawnYMin, spawnYMax);
+            if (spawnYRandom > 0 && spawnYRandom < playerSafeDistance)
+            {
+                spawnYRandom = playerSafeDistance;
+            }
+            else if(spawnYRandom < 0 && spawnYRandom > -playerSafeDistance)
+            {
+                spawnYRandom = -playerSafeDistance;
+            }
+
+            //int randomSize = Random.Range((int)Asteroid.AsteroidSize.Small, (int)Asteroid.AsteroidSize.Large + 1);
+            //SpawnAsteroid(new Vector3(spawnXRandom, spawnYRandom, 0), (Asteroid.AsteroidSize) randomSize);
+            SpawnAsteroid(new Vector3(spawnXRandom, spawnYRandom, 0), Asteroid.AsteroidSize.Large);
+        }
     }
 
     public void SpawnAsteroid(Vector3 position, Asteroid.AsteroidSize size)
     {
-       // Spawn an asteroid at the location specified by position parameter with the size specified by the size parameter.
+        // Spawn an asteroid at the location specified by position parameter with the size specified by the size parameter.
+        if (size == Asteroid.AsteroidSize.Large) {
+            Instantiate(asteroidLargePrefab, position, asteroidLargePrefab.transform.rotation);
+        }
+        else if (size == Asteroid.AsteroidSize.Medium)
+        {
+            Instantiate(asteroidMediumPrefab, position, asteroidMediumPrefab.transform.rotation);
+        }
+        else
+        {
+            Instantiate(asteroidSmallPrefab, position, asteroidMediumPrefab.transform.rotation);
+        }
+
     }
 }
