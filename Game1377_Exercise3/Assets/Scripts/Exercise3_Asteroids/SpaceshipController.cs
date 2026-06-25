@@ -1,93 +1,49 @@
 /*
- * Assignment: AsteroidsGame - SpaceshipController Script - PART 1 & 2
+ * Assignment: Asteroids Game - Asteroid Script - PART 2
  * 
- * Objective:
- * Implement a player controller for a spaceship in an Asteroids prototype. The player should be able to rotate the ship,
- * move forward, wrap around the screen, and shoot bullets. 
- * 
- * Requirements:
- * PART 1: Player Movement
- * 1. The player should be able to rotate the ship left and right using A/D keys from an input axis.
- *      This movement should be done with Transform based movement. 
- * 2. The player should be able to thrust forward using only the W key from an input axis
- *      This movement should be done with physics applied to a RigidBody2D. 
- * 3. The player should be able to wrap around the screen when they go off one edge and come back on the other side.
- * 4. The player should be able to teleport to a random location on the screen using left shift in an input button. You 
- *      do not need to check if there is an asteroid there. 
- *      Hint: For determining the random location, you can use the ScreenBounds class (see ScreenWrap.cs for how to use)
- *      
- * PART 2: Shooting
- * 1. The player should be able to shoot bullets using the space key in an input button
- *      Bullets should only go in the direction the ship is facing and bullet speed should be controlled by the Bullet.cs
+ * Objective: Create a functional asteroid script. This script will be responsible for the functionality of the asteroids.
+ * this should include initial velocity, angular velocity, and breaking into smaller asteroids when destroyed.
+ * Remember, asteroids should only spawn through the AsteroidSpawner script. 
  
- */
+* Requirements:
+* 1. The asteroid should start with a constant speed but a random angular velocity. Both of these are set in the Rigidbody2D
+*       The movement direction of the asteroid should not change. 
+*       Hint: All movement for the asteroid should be done via a Rigidbody2D and should be able to be set at Start.
+* 2. When the asteroid is destroyed, it should spawn two smaller asteroids if it is not already the smallest size. 
+*       Hint: How can you use a function to set the AsteroidSpawner variable from a different script?
+* 3. When the astroid hits the player, it should destroy the player. 
+*/
 
 using UnityEngine;
 
-public class AsteroidsPlayerController : MonoBehaviour
+public class Asteroid : MonoBehaviour
 {
-    [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private float rotationSpeed = 360f;
-    [SerializeField] private float thrustForce = 500f;
-    [SerializeField] private Transform firePoint;
-    [SerializeField] private GameObject bulletPrefab;
+    public enum AsteroidSize { Small, Medium, Large }
 
-    private float rotationInput;
-    private float thrustInput;
+    [SerializeField] private AsteroidSize size;
+    [SerializeField] private float speed;
+    [SerializeField] private float minRotationSpeed = -180f;
+    [SerializeField] private float maxRotationSpeed = 180f;
+
+    private Rigidbody2D rb;
+    private AsteroidSpawner spawner;
+    private Vector2 velocity;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+
     }
 
     void Update()
     {
-        rotationInput = Input.GetAxis("Horizontal");
-        thrustInput = Input.GetAxis("Vertical");
-        HandleRotation();
-        HandleFire();
-        HandleHyperspace();
     }
 
-    void FixedUpdate()
-    {
-        HandleThrust();
-    }
-
-    private void HandleRotation()
+    private void BreakAsteroid()
     {
 
     }
 
-    private void HandleThrust()
-    {
-        
-    }
-
-    private void HandleFire()
-    {
-
-    }
-
-    private void FireBullet()
-    {
-        if (bulletPrefab == null)
-        {
-            Debug.LogWarning("Bullet prefab not assigned!");
-            return;
-        }
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-    }
-
-    private void HandleHyperspace()
-    {
-        if (Input.GetButtonDown("Fire2"))
-        {
-            TeleportToRandomLocation();
-        }
-    }
-
-    private void TeleportToRandomLocation()
+    private void SpawnChildren(AsteroidSize childSize)
     {
 
     }
