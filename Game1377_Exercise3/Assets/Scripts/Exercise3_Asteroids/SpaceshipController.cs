@@ -1,25 +1,15 @@
 /*
- * Assignment: AsteroidsGame - SpaceshipController Script - PART 1 & 2
+ * Excercise 03.1: SpaceshipController.cs
+ * Name: Ka Bo Cheung
+ * Date: 06/25/2026
+ * Course: GAME-1377-001
  * 
- * Objective:
- * Implement a player controller for a spaceship in an Asteroids prototype. The player should be able to rotate the ship,
- * move forward, wrap around the screen, and shoot bullets. 
+ * Script for the spaceship to thrust forward and change its rotation
  * 
- * Requirements:
- * PART 1: Player Movement
- * 1. The player should be able to rotate the ship left and right using A/D keys from an input axis.
- *      This movement should be done with Transform based movement. 
- * 2. The player should be able to thrust forward using only the W key from an input axis
- *      This movement should be done with physics applied to a RigidBody2D. 
- * 3. The player should be able to wrap around the screen when they go off one edge and come back on the other side.
- * 4. The player should be able to teleport to a random location on the screen using left shift in an input button. You 
- *      do not need to check if there is an asteroid there. 
- *      Hint: For determining the random location, you can use the ScreenBounds class (see ScreenWrap.cs for how to use)
- *      
+ * TODO     
  * PART 2: Shooting
  * 1. The player should be able to shoot bullets using the space key in an input button
- *      Bullets should only go in the direction the ship is facing and bullet speed should be controlled by the Bullet.cs
- 
+ *      Bullets should only go in the direction the ship is facing and bullet speed should be controlled by the Bullet.cs 
  */
 
 using UnityEngine;
@@ -54,14 +44,24 @@ public class AsteroidsPlayerController : MonoBehaviour
         HandleThrust();
     }
 
+    /// <summary>
+    /// Press A to rotate the spaceship to the left
+    /// Press D to rotate the spaceship to the right
+    /// </summary>
     private void HandleRotation()
     {
-
+        float rotationInput = Input.GetAxis("Horizontal");
+        transform.Rotate(Vector3.back * rotationInput * rotationSpeed * Time.deltaTime);
     }
 
+    /// <summary>
+    /// Press W to thrust the spaceship forward
+    /// Press S to thrust the spaceship backward 
+    /// </summary>
     private void HandleThrust()
     {
-        
+        float thrustInput = Input.GetAxis("Vertical");
+        rb.AddForce(transform.up * thrustInput * thrustForce);
     }
 
     private void HandleFire()
@@ -79,6 +79,9 @@ public class AsteroidsPlayerController : MonoBehaviour
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
     }
 
+    /// <summary>
+    /// Press left shift key to hyperspace-teleport the spaceship to random location 
+    /// </summary>
     private void HandleHyperspace()
     {
         if (Input.GetButtonDown("Fire2"))
@@ -86,9 +89,14 @@ public class AsteroidsPlayerController : MonoBehaviour
             TeleportToRandomLocation();
         }
     }
-
+    /// <summary>
+    /// Teleport the spaceship to random location within the screen bounds
+    /// </summary>
     private void TeleportToRandomLocation()
     {
+        float locationX = Random.Range(ScreenBounds.ScreenLeft, ScreenBounds.ScreenRight + 1.0f);
+        float locationY = Random.Range(ScreenBounds.ScreenBottom, ScreenBounds.ScreenTop + 1.0f);
 
+        transform.position = new Vector3(locationX, locationY, 0);
     }
 }
