@@ -1,17 +1,11 @@
 /*
- * Excercise 03.1: SpaceshipController.cs
+ * Excercise 03.2: SpaceshipController.cs
  * Name: Ka Bo Cheung
  * Date: 06/25/2026
  * Course: GAME-1377-001
  * 
- * Script for the spaceship to thrust forward and change its rotation
- * 
- * TODO     
- * PART 2: Shooting
- * 1. The player should be able to shoot bullets using the space key in an input button
- *      Bullets should only go in the direction the ship is facing and bullet speed should be controlled by the Bullet.cs 
+ * Script for the spaceship to thrust forward, change its rotation, and fire bullets
  */
-
 using UnityEngine;
 
 public class AsteroidsPlayerController : MonoBehaviour
@@ -64,11 +58,20 @@ public class AsteroidsPlayerController : MonoBehaviour
         rb.AddForce(transform.up * thrustInput * thrustForce);
     }
 
+    /// <summary>
+    /// Press Space Bar to fire the bullet
+    /// </summary>
     private void HandleFire()
     {
-
+        if (Input.GetButtonDown("Fire1"))
+        {
+            FireBullet();
+        }
     }
 
+    /// <summary>
+    /// Instantiate and fire the bullet prefab
+    /// </summary>
     private void FireBullet()
     {
         if (bulletPrefab == null)

@@ -1,17 +1,12 @@
 /*
- * Assignment: AsteroidsGame - Bullet Script - 2
+/*
+ * Excercise 03.2: Bullet.cs
+ * Name: Ka Bo Cheung
+ * Date: 06/25/2026
+ * Course: GAME-1377-001
  * 
- * Objective:
- * Implement a player controller for a spaceship in an Asteroids prototype. The player should be able to rotate the ship,
- * move forward, wrap around the screen, and shoot bullets. 
+ * Script for the bullet functionality
  * 
- * Requirements:   
- * PART 2: Shooting
- * 1. The bullets should start off moving in the direciton they are spawned at a speed set by bulletSpeed. 
- *      This should be set in the Start method of this script.
- *      The movement of the bullet should be done with Physics applied to a Rigidbody2D.
- * 2. The bullets should be destroyed after bulletLifetime seconds or when they collide with an asteroid.
- *
  */
 using UnityEngine;
 
@@ -21,9 +16,16 @@ public class Bullet : MonoBehaviour
     [SerializeField] private float bulletSpeed = 20f;
     [SerializeField] private float bulletLifetime = 5f;
 
+    private Rigidbody2D rb;
+
     void Start()
     {
+        // Add instant force to the bullet once instantiated
+        rb = GetComponent<Rigidbody2D>();
+        rb.AddForce(transform.up * bulletSpeed, ForceMode2D.Impulse);
 
+        // Destroy the bullet in a specific time after instantiating
+        Destroy(gameObject, bulletLifetime);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
