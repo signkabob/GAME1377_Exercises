@@ -1,19 +1,11 @@
 /*
- * Assignment: Asteroids Game - Asteroid Script - PART 2
+ * Excercise 03.2: Asteroid.cs
+ * Name: Ka Bo Cheung
+ * Date: 06/27/2026
+ * Course: GAME-1377-001
  * 
- * Objective: Create a functional asteroid script. This script will be responsible for the functionality of the asteroids.
- * this should include initial velocity, angular velocity, and breaking into smaller asteroids when destroyed.
- * Remember, asteroids should only spawn through the AsteroidSpawner script. 
- 
-* Requirements:
-* 1. The asteroid should start with a constant speed but a random angular velocity. Both of these are set in the Rigidbody2D
-*       The movement direction of the asteroid should not change. 
-*       Hint: All movement for the asteroid should be done via a Rigidbody2D and should be able to be set at Start.
-* 2. When the asteroid is destroyed, it should spawn two smaller asteroids if it is not already the smallest size. 
-*       Hint: How can you use a function to set the AsteroidSpawner variable from a different script?
-* 3. When the astroid hits the player, it should destroy the player. 
-*/
-
+ * Script for the asteroid functionality
+ */
 using UnityEngine;
 
 public class Asteroid : MonoBehaviour
@@ -31,20 +23,60 @@ public class Asteroid : MonoBehaviour
 
     void Start()
     {
-    
+        rb = GetComponent<Rigidbody2D>();
+        spawner = GameObject.Find("AsteroidSpawner").GetComponent<AsteroidSpawner>();
+        
+        // A normalized vector to the edge of the circle in any random direction  
+        velocity = Random.insideUnitCircle.normalized;
+        // A random rotation speed between minimum and max range
+        float randomRotationSpeed = Random.Range(minRotationSpeed, maxRotationSpeed);
+
+        rb.linearVelocity = velocity * speed;
+        rb.angularVelocity = randomRotationSpeed;
     }
 
-    void Update()
-    {
-    }
-
+    /// <summary>
+    /// Breaks down the asteroid into lesser size and destroy it
+    /// </summary>
     private void BreakAsteroid()
     {
-
+        if (size == AsteroidSize.Large)
+        {
+            SpawnChildren(AsteroidSize.Medium);
+        }
+        else if (size == AsteroidSize.Medium)
+        {
+            SpawnChildren(AsteroidSize.Small);
+        }
+        Destroy(gameObject);
     }
 
+    /// <summary>
+    /// Spawns two asteroid spawns of lesser size
+    /// </summary>
+    /// <param name="childSize">next lesser size of the spawn</param>
     private void SpawnChildren(AsteroidSize childSize)
     {
-        
+        for (int i = 0; i < 2; i++)
+        {
+            spawner.SpawnAsteroid(transform.position, childSize);
+        }
+    }
+
+    /// <summary>
+    /// Determines the event when colliding with specific objects 
+    /// </summary>
+    /// <param name="collider"></param>
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.gameObject.CompareTag("Player"))
+        {
+            Destroy(collider.gameObject);
+        }
+
+        if (collider.gameObject.CompareTag("Bullet"))
+        {
+            BreakAsteroid();
+        }
     }
 }

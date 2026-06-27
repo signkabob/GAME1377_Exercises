@@ -1,12 +1,10 @@
 /*
-/*
  * Excercise 03.2: Bullet.cs
  * Name: Ka Bo Cheung
  * Date: 06/25/2026
  * Course: GAME-1377-001
  * 
  * Script for the bullet functionality
- * 
  */
 using UnityEngine;
 
