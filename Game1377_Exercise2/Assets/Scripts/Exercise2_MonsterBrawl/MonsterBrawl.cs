@@ -31,54 +31,52 @@ public class MonsterBrawl : MonoBehaviour
         int turn;
 
         // Monster #1 selection
-        for (int monster1 = 0;  monster1 < monsterNames.Length; monster1++)
+        for (int monster1Index = 0;  monster1Index < monsterNames.Length; monster1Index++)
         {
             // Monster #2 selection; Skip used monster #1 for each iteration 
-            for (int monster2 = monster1; monster2 < monsterNames.Length; monster2++)
+            for (int monster2Index = monster1Index; monster2Index < monsterNames.Length; monster2Index++)
             {
                 // Monster shouldn't fight its own kind
-                if (monster1 == monster2)
+                if (monster1Index != monster2Index)
                 {
-                    continue;
-                } 
+                    // Initialize variables for each unique battle
+                    monster1Name = monsterNames[monster1Index];
+                    monster1Health = healthStats[monster1Index];
+                    monster2Name = monsterNames[monster2Index];
+                    monster2Health = healthStats[monster2Index];
+                    turn = 0;
 
-                // Initialize variables for each unique battle
-                monster1Name = monsterNames[monster1];
-                monster1Health = healthStats[monster1];
-                monster2Name = monsterNames[monster2];
-                monster2Health = healthStats[monster2];
-                turn = 0;
-
-                // Battle simulation between monster #1 and monster #2 until either one is dead
-                while (monster1Health > 0 && monster2Health > 0)
-                {
-                    turn++;
-                    // Monster #1's turn to attack based on its speed
-                    if (TimeToAttack(turn, speedStats[monster1]))
+                    // Battle simulation between monster #1 and monster #2 until either one is dead
+                    while (monster1Health > 0 && monster2Health > 0)
                     {
-                        Attack(attackStats[monster1], ref monster2Health); 
+                        turn++;
+                        // Monster #1's turn to attack based on its speed
+                        if (TimeToAttack(turn, speedStats[monster1Index]))
+                        {
+                            Attack(attackStats[monster1Index], ref monster2Health);
+                        }
+                        // Monster #2's turn to attack based on its speed
+                        if (TimeToAttack(turn, speedStats[monster2Index]))
+                        {
+                            Attack(attackStats[monster2Index], ref monster1Health);
+                        }
                     }
-                    // Monster #2's turn to attack based on its speed
-                    if (TimeToAttack(turn, speedStats[monster2]))
-                    {
-                        Attack(attackStats[monster2], ref monster1Health);
-                    }
-                }
 
-                // If both monsters die on the same turn...
-                if (monster1Health <= 0 && monster2Health <= 0)
-                {
-                    DisplayResult(monster1Name, monster2Name, true, monster1Name, turn, monster1Health);
-                }
-                // If monster #1 defeats monster #2...
-                else if (monster2Health <= 0)
-                {
-                    DisplayResult(monster1Name, monster2Name, false, monster1Name, turn, monster1Health);
-                }
-                // If monster #2 defeats monster #1...
-                else
-                {
-                    DisplayResult(monster1Name, monster2Name, false, monster2Name, turn, monster2Health);
+                    // If both monsters die on the same turn...
+                    if (monster1Health <= 0 && monster2Health <= 0)
+                    {
+                        DisplayResult(monster1Name, monster2Name, true, monster1Name, turn, monster1Health);
+                    }
+                    // If monster #1 defeats monster #2...
+                    else if (monster2Health <= 0)
+                    {
+                        DisplayResult(monster1Name, monster2Name, false, monster1Name, turn, monster1Health);
+                    }
+                    // If monster #2 defeats monster #1...
+                    else
+                    {
+                        DisplayResult(monster1Name, monster2Name, false, monster2Name, turn, monster2Health);
+                    }
                 }
             }
         }
@@ -92,14 +90,12 @@ public class MonsterBrawl : MonoBehaviour
     /// <returns>Checks if the turn number is a multiple of the monster speed</returns>
     private bool TimeToAttack(int turn, int speed)
     {
+        bool attackNow = false;
         if (turn % speed == 0)
         {
-            return true;
+            attackNow = true;
         }
-        else
-        {
-            return false;
-        }
+        return attackNow;
     }
 
     /// <summary>
