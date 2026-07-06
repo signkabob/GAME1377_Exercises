@@ -1,7 +1,7 @@
 /*
  * Excercise 03.2: SpaceshipController.cs
  * Name: Ka Bo Cheung
- * Date: 06/25/2026
+ * Date: 07/05/2026
  * Course: GAME-1377-001
  * 
  * Script for the spaceship to thrust forward, change its rotation, and fire bullets
@@ -26,8 +26,6 @@ public class AsteroidsPlayerController : MonoBehaviour
 
     void Update()
     {
-        rotationInput = Input.GetAxis("Horizontal");
-        thrustInput = Input.GetAxis("Vertical");
         HandleRotation();
         HandleFire();
         HandleHyperspace();
@@ -50,12 +48,14 @@ public class AsteroidsPlayerController : MonoBehaviour
 
     /// <summary>
     /// Press W to thrust the spaceship forward
-    /// Press S to thrust the spaceship backward 
     /// </summary>
     private void HandleThrust()
     {
         float thrustInput = Input.GetAxis("Vertical");
-        rb.AddForce(transform.up * thrustInput * thrustForce);
+        if (thrustInput > 0)
+        {
+            rb.AddForce(transform.up * thrustInput * thrustForce);
+        }
     }
 
     /// <summary>
@@ -63,7 +63,7 @@ public class AsteroidsPlayerController : MonoBehaviour
     /// </summary>
     private void HandleFire()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire"))
         {
             FireBullet();
         }
@@ -87,7 +87,7 @@ public class AsteroidsPlayerController : MonoBehaviour
     /// </summary>
     private void HandleHyperspace()
     {
-        if (Input.GetButtonDown("Fire2"))
+        if (Input.GetButtonDown("Hyperspace"))
         {
             TeleportToRandomLocation();
         }
