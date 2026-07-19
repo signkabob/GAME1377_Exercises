@@ -964,11 +964,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 642762768615809231, guid: b5bed9ac15f324145b2fdce28eb50970, type: 3}
       propertyPath: sideBlasterPostion.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 642762768615809231, guid: b5bed9ac15f324145b2fdce28eb50970, type: 3}
       propertyPath: sideBlasterPostion.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 642762768615809231, guid: b5bed9ac15f324145b2fdce28eb50970, type: 3}
       propertyPath: sideBlasterPostion.z

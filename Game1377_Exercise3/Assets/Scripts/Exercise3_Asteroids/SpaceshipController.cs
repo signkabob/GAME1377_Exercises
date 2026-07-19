@@ -8,13 +8,13 @@
  */
 using UnityEngine;
 using System.Collections;
-using Unity.VisualScripting;
 
 public class AsteroidsPlayerController : MonoBehaviour
 {
     public enum State { Invalid, Active, Teleporting, Invincible };
 
     private Rigidbody2D rb;
+    private PowerUp powerUp;
 
     public State currentState;
     
@@ -25,13 +25,8 @@ public class AsteroidsPlayerController : MonoBehaviour
 
     [SerializeField] private float fireCooldownTime = 1.0f;
     [SerializeField] private bool fireOnCooldown = false;
+    public float powerMultiplier = 1.0f;
     [SerializeField] private float invincibilityTime = 5.0f;
-    [SerializeField] private float hasteTime = 10.0f;
-    [SerializeField] private float currentMultiplier = 1.0f;
-    [SerializeField] private float hasteMultiplier = 2.0f;
-    [SerializeField] private float triBlastTime = 10.0f;
-    [SerializeField] private float sideBlasterCloseness = 0.4f;
-    public bool  isOnTripleBlastMode = false;
 
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject bulletPrefab;
@@ -42,6 +37,7 @@ public class AsteroidsPlayerController : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        powerUp = GetComponent<PowerUp>();
     }
 
     void Start()
@@ -67,7 +63,7 @@ public class AsteroidsPlayerController : MonoBehaviour
     private void HandleRotation()
     {
         float rotationInput = Input.GetAxis("Horizontal");
-        transform.Rotate(Vector3.back * rotationInput * rotationSpeed * currentMultiplier * Time.deltaTime);
+        transform.Rotate(Vector3.back * rotationInput * rotationSpeed * powerMultiplier * Time.deltaTime);
     }
 
     /// <summary>
@@ -78,7 +74,7 @@ public class AsteroidsPlayerController : MonoBehaviour
         float thrustInput = Input.GetAxis("Vertical");
         if (thrustInput > 0)
         {
-            rb.AddForce(transform.up * thrustInput * thrustForce * currentMultiplier);
+            rb.AddForce(transform.up * thrustInput * thrustForce * powerMultiplier);
         }
     }
 
@@ -106,10 +102,9 @@ public class AsteroidsPlayerController : MonoBehaviour
         if (!fireOnCooldown)
         {
             Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-            if (isOnTripleBlastMode)
+            if (powerUp.IsOnTripleBlastMode)
             {
-                Instantiate(bulletPrefab, firePoint.position + (transform.right * sideBlasterCloseness), firePoint.rotation);
-                Instantiate(bulletPrefab, firePoint.position - (transform.right * sideBlasterCloseness), firePoint.rotation);
+                powerUp.UseTriBlasters(bulletPrefab, firePoint);
             }
             StartCoroutine(StartFireCooldown());
         }
@@ -171,6 +166,10 @@ public class AsteroidsPlayerController : MonoBehaviour
         }
         return safety;
     }
+    public void GiveOneLifeUp()
+    {
+        numOfLife += 1;
+    }
 
 
     public void KaboomToDeath()
@@ -197,43 +196,5 @@ public class AsteroidsPlayerController : MonoBehaviour
         currentState = State.Invincible;
         yield return new WaitForSeconds(invincibilityTime);
         currentState = State.Active;
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("StarLife"))
-        {
-            GiveOneLifeUp();
-            Destroy(collision.gameObject);
-        }
-        else if (collision.CompareTag("SuperEngine"))
-        {
-            StartCoroutine(GiveHaste());
-            Destroy(collision.gameObject);
-        }
-        else if (collision.CompareTag("TriBlaster"))
-        {
-            StartCoroutine(GiveTriBlast());
-            Destroy(collision.gameObject);
-        }
-    }
-
-    private void GiveOneLifeUp()
-    {
-        numOfLife += 1;
-    }
-
-    private IEnumerator GiveHaste()
-    {
-        currentMultiplier = hasteMultiplier;
-        yield return new WaitForSeconds(hasteTime);
-        currentMultiplier = 1.0f;
-    }
-
-    private IEnumerator GiveTriBlast()
-    {
-        isOnTripleBlastMode = true;
-        yield return new WaitForSeconds(triBlastTime);
-        isOnTripleBlastMode = false;
     }
 }
