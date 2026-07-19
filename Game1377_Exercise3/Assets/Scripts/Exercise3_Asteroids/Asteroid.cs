@@ -70,7 +70,10 @@ public class Asteroid : MonoBehaviour
             switch (spaceship.currentState) 
             {
                 case AsteroidsPlayerController.State.Active:
-                    Debug.Log("DEAD");
+                    spaceship.KaboomToDeath();
+                    break;
+                case AsteroidsPlayerController.State.Invincible:
+                    Debug.Log("STARPOWER");
                     break;
                 default:
                     Debug.LogError("ALREADY DEAD");

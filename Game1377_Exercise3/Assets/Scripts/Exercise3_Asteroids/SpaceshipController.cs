@@ -7,20 +7,24 @@
  * Script for the spaceship to thrust forward, change its rotation, and fire bullets
  */
 using UnityEngine;
-
+using System.Collections;
 
 public class AsteroidsPlayerController : MonoBehaviour
 {
-    public enum State { Invalid, Active, Teleporting };
+    public enum State { Invalid, Active, Teleporting, Invincible };
     public enum PowerUp { Invalid, Normal, Haste, TripleFire }
 
     private Rigidbody2D rb;
 
     public State currentState;
     public PowerUp currentPowerUp;
+
+    [SerializeField] private int numOfLife = 3;
     [SerializeField] private float rotationSpeed = 360f;
     [SerializeField] private float thrustForce = 500f;
     [SerializeField] private float playerSafeDistance = 3;
+    [SerializeField] private float invincibilityTime = 5.0f;
+    
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject bulletPrefab;
 
@@ -112,6 +116,7 @@ public class AsteroidsPlayerController : MonoBehaviour
     {
         float locationX;
         float locationY;
+        State previousState = currentState;
         currentState = State.Teleporting;
         do
         {
@@ -119,7 +124,7 @@ public class AsteroidsPlayerController : MonoBehaviour
             locationY = Random.Range(ScreenBounds.ScreenBottom, ScreenBounds.ScreenTop);
             if (IsSafeOnScan(new Vector2(locationX, locationY)))
             {
-                currentState = State.Active;
+                currentState = previousState;
             }
         } while (currentState == State.Teleporting);
         transform.position = new Vector3(locationX, locationY, 0);
@@ -142,5 +147,31 @@ public class AsteroidsPlayerController : MonoBehaviour
             }
         }
         return safety;
+    }
+
+
+    public void KaboomToDeath()
+    {
+        numOfLife -= 1;
+        if (numOfLife <= 0)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Respawn();
+        }
+    }
+
+    private void Respawn()
+    {
+        transform.position = Vector3.zero;
+        StartCoroutine(GiveInvincibility());
+    }
+    private IEnumerator GiveInvincibility()
+    {
+        currentState = State.Invincible;
+        yield return new WaitForSeconds(invincibilityTime);
+        currentState = State.Active;
     }
 }
