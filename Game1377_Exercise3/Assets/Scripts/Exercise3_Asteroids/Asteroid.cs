@@ -75,9 +75,6 @@ public class Asteroid : MonoBehaviour
                 case AsteroidsPlayerController.State.Invincible:
                     Debug.Log("STARPOWER");
                     break;
-                default:
-                    Debug.LogError("ALREADY DEAD");
-                    break;
             }
         }
 

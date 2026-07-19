@@ -25,7 +25,7 @@ public class AsteroidsPlayerController : MonoBehaviour
     [SerializeField] private float thrustForce = 500f;
     [SerializeField] private float playerSafeDistance = 3;
     [SerializeField] private float invincibilityTime = 5.0f;
-    [SerializeField] private float fireCooldownTime = 1.5f;
+    [SerializeField] private float fireCooldownTime = 1.0f;
     [SerializeField] private bool fireOnCooldown = false;
     
     [SerializeField] private Transform firePoint;
@@ -188,5 +188,19 @@ public class AsteroidsPlayerController : MonoBehaviour
         currentState = State.Invincible;
         yield return new WaitForSeconds(invincibilityTime);
         currentState = State.Active;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("StarLife"))
+        {
+            GiveOneLifeUp();
+            Destroy(collision.gameObject);
+        }
+    }
+
+    private void GiveOneLifeUp()
+    {
+        numOfLife += 1;
     }
 }
