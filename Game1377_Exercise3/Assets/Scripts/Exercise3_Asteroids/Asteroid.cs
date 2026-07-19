@@ -1,7 +1,7 @@
 /*
- * Excercise 03.2: Asteroid.cs
+ * Excercise 03.3: Asteroid.cs
  * Name: Ka Bo Cheung
- * Date: 06/27/2026
+ * Date: 07/19/2026
  * Course: GAME-1377-001
  * 
  * Script for the asteroid functionality
@@ -24,7 +24,6 @@ public class Asteroid : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        spawner = GameObject.Find("AsteroidSpawner").GetComponent<AsteroidSpawner>();
         
         // A normalized vector to the edge of the circle in any random direction  
         velocity = Random.insideUnitCircle.normalized;
@@ -40,13 +39,9 @@ public class Asteroid : MonoBehaviour
     /// </summary>
     private void BreakAsteroid()
     {
-        if (size == AsteroidSize.Large)
+        if (size != AsteroidSize.Small)
         {
-            SpawnChildren(AsteroidSize.Medium);
-        }
-        else if (size == AsteroidSize.Medium)
-        {
-            SpawnChildren(AsteroidSize.Small);
+            SpawnChildren(size - 1);
         }
         Destroy(gameObject);
     }
@@ -78,5 +73,10 @@ public class Asteroid : MonoBehaviour
         {
             BreakAsteroid();
         }
+    }
+
+    public void SetAsteroidSpawner(AsteroidSpawner asteroidSpawner)
+    {
+        spawner = asteroidSpawner;
     }
 }

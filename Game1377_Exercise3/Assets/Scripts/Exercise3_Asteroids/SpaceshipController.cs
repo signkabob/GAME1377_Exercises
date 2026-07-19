@@ -1,7 +1,7 @@
 /*
- * Excercise 03.2: SpaceshipController.cs
+ * Excercise 03.3: SpaceshipController.cs
  * Name: Ka Bo Cheung
- * Date: 07/05/2026
+ * Date: 07/19/2026
  * Course: GAME-1377-001
  * 
  * Script for the spaceship to thrust forward, change its rotation, and fire bullets
@@ -37,8 +37,7 @@ public class AsteroidsPlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Press A to rotate the spaceship to the left
-    /// Press D to rotate the spaceship to the right
+    /// Press 'Horizontal' key to rotate the spaceship to the left or right
     /// </summary>
     private void HandleRotation()
     {
@@ -47,7 +46,7 @@ public class AsteroidsPlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Press W to thrust the spaceship forward
+    /// Press 'Verticial' key to thrust the spaceship forward
     /// </summary>
     private void HandleThrust()
     {
@@ -79,7 +78,7 @@ public class AsteroidsPlayerController : MonoBehaviour
             Debug.LogWarning("Bullet prefab not assigned!");
             return;
         }
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
     }
 
     /// <summary>

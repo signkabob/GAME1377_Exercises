@@ -1,7 +1,7 @@
 /*
- * Excercise 03.2: Bullet.cs
+ * Excercise 03.3: Bullet.cs
  * Name: Ka Bo Cheung
- * Date: 06/25/2026
+ * Date: 07/19/2026
  * Course: GAME-1377-001
  * 
  * Script for the bullet functionality
@@ -24,10 +24,5 @@ public class Bullet : MonoBehaviour
 
         // Destroy the bullet in a specific time after instantiating
         Destroy(gameObject, bulletLifetime);
-    }
-
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-
     }
 }
