@@ -13,24 +13,24 @@ using Unity.VisualScripting;
 public class AsteroidsPlayerController : MonoBehaviour
 {
     public enum State { Invalid, Active, Teleporting, Invincible };
-    public enum PowerUp { Invalid, Normal, Haste, TripleFire }
 
     private Rigidbody2D rb;
 
     public State currentState;
-    public PowerUp currentPowerUp;
     
     [SerializeField] private int numOfLife = 3;
     [SerializeField] private float rotationSpeed = 360f;
     [SerializeField] private float thrustForce = 500f;
-    [SerializeField] private float currentMultiplier = 1.0f;
     [SerializeField] private float playerSafeDistance = 3;
 
     [SerializeField] private float fireCooldownTime = 1.0f;
     [SerializeField] private bool fireOnCooldown = false;
     [SerializeField] private float invincibilityTime = 5.0f;
     [SerializeField] private float hasteTime = 10.0f;
+    [SerializeField] private float currentMultiplier = 1.0f;
     [SerializeField] private float hasteMultiplier = 2.0f;
+    [SerializeField] private float triBlastTime = 10.0f;
+    public bool  isOnTripleBlastMode = false;
 
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject bulletPrefab;
@@ -46,7 +46,6 @@ public class AsteroidsPlayerController : MonoBehaviour
     void Start()
     {
         currentState = State.Active;
-        currentPowerUp = PowerUp.Normal;
     }
 
     void Update()
@@ -106,6 +105,11 @@ public class AsteroidsPlayerController : MonoBehaviour
         if (!fireOnCooldown)
         {
             Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+            if (isOnTripleBlastMode)
+            {
+                Instantiate(bulletPrefab, firePoint.position, firePoint.rotation * Quaternion.Euler(0, 0, 45f));
+                Instantiate(bulletPrefab, firePoint.position, firePoint.rotation * Quaternion.Euler(0, 0, -45f));
+            }
             StartCoroutine(StartFireCooldown());
         }
     }
@@ -199,6 +203,11 @@ public class AsteroidsPlayerController : MonoBehaviour
             StartCoroutine(GiveHaste());
             Destroy(collision.gameObject);
         }
+        else if (collision.CompareTag("TriBlaster"))
+        {
+            StartCoroutine(GiveTriBlast());
+            Destroy(collision.gameObject);
+        }
     }
 
     private void GiveOneLifeUp()
@@ -215,10 +224,15 @@ public class AsteroidsPlayerController : MonoBehaviour
 
     private IEnumerator GiveHaste()
     {
-        currentPowerUp = PowerUp.Haste;
         currentMultiplier = hasteMultiplier;
         yield return new WaitForSeconds(hasteTime);
-        currentPowerUp = PowerUp.Normal;
         currentMultiplier = 1.0f;
+    }
+
+    private IEnumerator GiveTriBlast()
+    {
+        isOnTripleBlastMode = true;
+        yield return new WaitForSeconds(triBlastTime);
+        isOnTripleBlastMode = false;
     }
 }
