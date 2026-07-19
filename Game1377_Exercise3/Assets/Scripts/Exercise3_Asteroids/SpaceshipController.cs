@@ -30,6 +30,7 @@ public class AsteroidsPlayerController : MonoBehaviour
     [SerializeField] private float currentMultiplier = 1.0f;
     [SerializeField] private float hasteMultiplier = 2.0f;
     [SerializeField] private float triBlastTime = 10.0f;
+    [SerializeField] private float sideBlasterCloseness = 0.4f;
     public bool  isOnTripleBlastMode = false;
 
     [SerializeField] private Transform firePoint;
@@ -107,8 +108,8 @@ public class AsteroidsPlayerController : MonoBehaviour
             Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
             if (isOnTripleBlastMode)
             {
-                Instantiate(bulletPrefab, firePoint.position, firePoint.rotation * Quaternion.Euler(0, 0, 45f));
-                Instantiate(bulletPrefab, firePoint.position, firePoint.rotation * Quaternion.Euler(0, 0, -45f));
+                Instantiate(bulletPrefab, firePoint.position + (transform.right * sideBlasterCloseness), firePoint.rotation);
+                Instantiate(bulletPrefab, firePoint.position - (transform.right * sideBlasterCloseness), firePoint.rotation);
             }
             StartCoroutine(StartFireCooldown());
         }
@@ -191,6 +192,13 @@ public class AsteroidsPlayerController : MonoBehaviour
         StartCoroutine(GiveInvincibility());
     }
 
+    private IEnumerator GiveInvincibility()
+    {
+        currentState = State.Invincible;
+        yield return new WaitForSeconds(invincibilityTime);
+        currentState = State.Active;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("StarLife"))
@@ -213,13 +221,6 @@ public class AsteroidsPlayerController : MonoBehaviour
     private void GiveOneLifeUp()
     {
         numOfLife += 1;
-    }
-
-    private IEnumerator GiveInvincibility()
-    {
-        currentState = State.Invincible;
-        yield return new WaitForSeconds(invincibilityTime);
-        currentState = State.Active;
     }
 
     private IEnumerator GiveHaste()
