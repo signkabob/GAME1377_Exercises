@@ -23,11 +23,15 @@ public class AsteroidsPlayerController : MonoBehaviour
     [SerializeField] private int numOfLife = 3;
     [SerializeField] private float rotationSpeed = 360f;
     [SerializeField] private float thrustForce = 500f;
+    [SerializeField] private float currentMultiplier = 1.0f;
     [SerializeField] private float playerSafeDistance = 3;
-    [SerializeField] private float invincibilityTime = 5.0f;
+
     [SerializeField] private float fireCooldownTime = 1.0f;
     [SerializeField] private bool fireOnCooldown = false;
-    
+    [SerializeField] private float invincibilityTime = 5.0f;
+    [SerializeField] private float hasteTime = 10.0f;
+    [SerializeField] private float hasteMultiplier = 2.0f;
+
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject bulletPrefab;
 
@@ -63,7 +67,7 @@ public class AsteroidsPlayerController : MonoBehaviour
     private void HandleRotation()
     {
         float rotationInput = Input.GetAxis("Horizontal");
-        transform.Rotate(Vector3.back * rotationInput * rotationSpeed * Time.deltaTime);
+        transform.Rotate(Vector3.back * rotationInput * rotationSpeed * currentMultiplier * Time.deltaTime);
     }
 
     /// <summary>
@@ -74,7 +78,7 @@ public class AsteroidsPlayerController : MonoBehaviour
         float thrustInput = Input.GetAxis("Vertical");
         if (thrustInput > 0)
         {
-            rb.AddForce(transform.up * thrustInput * thrustForce);
+            rb.AddForce(transform.up * thrustInput * thrustForce * currentMultiplier);
         }
     }
 
@@ -183,13 +187,6 @@ public class AsteroidsPlayerController : MonoBehaviour
         StartCoroutine(GiveInvincibility());
     }
 
-    private IEnumerator GiveInvincibility()
-    {
-        currentState = State.Invincible;
-        yield return new WaitForSeconds(invincibilityTime);
-        currentState = State.Active;
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("StarLife"))
@@ -197,10 +194,31 @@ public class AsteroidsPlayerController : MonoBehaviour
             GiveOneLifeUp();
             Destroy(collision.gameObject);
         }
+        else if (collision.CompareTag("SuperEngine"))
+        {
+            StartCoroutine(GiveHaste());
+            Destroy(collision.gameObject);
+        }
     }
 
     private void GiveOneLifeUp()
     {
         numOfLife += 1;
+    }
+
+    private IEnumerator GiveInvincibility()
+    {
+        currentState = State.Invincible;
+        yield return new WaitForSeconds(invincibilityTime);
+        currentState = State.Active;
+    }
+
+    private IEnumerator GiveHaste()
+    {
+        currentPowerUp = PowerUp.Haste;
+        currentMultiplier = hasteMultiplier;
+        yield return new WaitForSeconds(hasteTime);
+        currentPowerUp = PowerUp.Normal;
+        currentMultiplier = 1.0f;
     }
 }
