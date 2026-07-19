@@ -43,7 +43,9 @@ public class Asteroid : MonoBehaviour
         {
             SpawnChildren(size - 1);
         }
-        Destroy(gameObject);
+        Animator animator = GetComponent<Animator>();
+        animator.Play("AsteroidExplosionAnim");
+        Destroy(gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
     }
 
     /// <summary>
