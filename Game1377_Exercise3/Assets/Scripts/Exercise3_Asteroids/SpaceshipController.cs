@@ -8,20 +8,34 @@
  */
 using UnityEngine;
 
+
 public class AsteroidsPlayerController : MonoBehaviour
 {
-    [SerializeField] private Rigidbody2D rb;
+    public enum State { Invalid, Active, Teleporting };
+    public enum PowerUp { Invalid, Normal, Haste, TripleFire }
+
+    private Rigidbody2D rb;
+
+    public State currentState;
+    public PowerUp currentPowerUp;
     [SerializeField] private float rotationSpeed = 360f;
     [SerializeField] private float thrustForce = 500f;
+    [SerializeField] private float playerSafeDistance = 3;
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject bulletPrefab;
 
     private float rotationInput;
     private float thrustInput;
 
-    void Start()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+    }
+
+    void Start()
+    {
+        currentState = State.Active;
+        currentPowerUp = PowerUp.Normal;
     }
 
     void Update()
@@ -86,7 +100,7 @@ public class AsteroidsPlayerController : MonoBehaviour
     /// </summary>
     private void HandleHyperspace()
     {
-        if (Input.GetButtonDown("Hyperspace"))
+        if (Input.GetButtonUp("Hyperspace") && currentState != State.Teleporting)
         {
             TeleportToRandomLocation();
         }
@@ -96,9 +110,37 @@ public class AsteroidsPlayerController : MonoBehaviour
     /// </summary>
     private void TeleportToRandomLocation()
     {
-        float locationX = Random.Range(ScreenBounds.ScreenLeft, ScreenBounds.ScreenRight);
-        float locationY = Random.Range(ScreenBounds.ScreenBottom, ScreenBounds.ScreenTop);
-
+        float locationX;
+        float locationY;
+        currentState = State.Teleporting;
+        do
+        {
+            locationX = Random.Range(ScreenBounds.ScreenLeft, ScreenBounds.ScreenRight);
+            locationY = Random.Range(ScreenBounds.ScreenBottom, ScreenBounds.ScreenTop);
+            if (IsSafeOnScan(new Vector2(locationX, locationY)))
+            {
+                currentState = State.Active;
+            }
+        } while (currentState == State.Teleporting);
         transform.position = new Vector3(locationX, locationY, 0);
+    }
+
+    /// <summary>
+    /// Scans the position if there is any nearby asteroid
+    /// </summary>
+    /// <param name="scanLocation">location of the scan circle</param>
+    /// <returns>True if nearby asteroid is detected. False if otherwise.</returns>
+    private bool IsSafeOnScan(Vector2 scanLocation)
+    {
+        bool safety = true;
+        Collider2D hitCollider = Physics2D.OverlapCircle(scanLocation, playerSafeDistance);
+        if (hitCollider != null)
+        {
+            if (hitCollider.CompareTag("Asteroid"))
+            {
+                safety = false;
+            }
+        }
+        return safety;
     }
 }

@@ -66,7 +66,16 @@ public class Asteroid : MonoBehaviour
     {
         if (collider.gameObject.CompareTag("Player"))
         {
-            Destroy(collider.gameObject);
+            AsteroidsPlayerController spaceship = collider.GetComponent<AsteroidsPlayerController>();
+            switch (spaceship.currentState) 
+            {
+                case AsteroidsPlayerController.State.Active:
+                    Debug.Log("DEAD");
+                    break;
+                default:
+                    Debug.LogError("ALREADY DEAD");
+                    break;
+            }
         }
 
         if (collider.gameObject.CompareTag("Bullet"))
