@@ -8,6 +8,7 @@
  */
 using UnityEngine;
 using System.Collections;
+using Unity.VisualScripting;
 
 public class AsteroidsPlayerController : MonoBehaviour
 {
@@ -18,12 +19,14 @@ public class AsteroidsPlayerController : MonoBehaviour
 
     public State currentState;
     public PowerUp currentPowerUp;
-
+    
     [SerializeField] private int numOfLife = 3;
     [SerializeField] private float rotationSpeed = 360f;
     [SerializeField] private float thrustForce = 500f;
     [SerializeField] private float playerSafeDistance = 3;
     [SerializeField] private float invincibilityTime = 5.0f;
+    [SerializeField] private float fireCooldownTime = 1.5f;
+    [SerializeField] private bool fireOnCooldown = false;
     
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject bulletPrefab;
@@ -96,7 +99,18 @@ public class AsteroidsPlayerController : MonoBehaviour
             Debug.LogWarning("Bullet prefab not assigned!");
             return;
         }
-        Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        if (!fireOnCooldown)
+        {
+            Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+            StartCoroutine(StartFireCooldown());
+        }
+    }
+
+    private IEnumerator StartFireCooldown()
+    {
+        fireOnCooldown = true;
+        yield return new WaitForSeconds(fireCooldownTime);
+        fireOnCooldown = false;
     }
 
     /// <summary>
@@ -168,6 +182,7 @@ public class AsteroidsPlayerController : MonoBehaviour
         transform.position = Vector3.zero;
         StartCoroutine(GiveInvincibility());
     }
+
     private IEnumerator GiveInvincibility()
     {
         currentState = State.Invincible;
