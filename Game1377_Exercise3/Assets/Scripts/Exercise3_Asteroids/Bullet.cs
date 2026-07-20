@@ -1,7 +1,7 @@
 /*
  * Excercise 03.3: Bullet.cs
  * Name: Ka Bo Cheung
- * Date: 07/19/2026
+ * Date: 07/20/2026
  * Course: GAME-1377-001
  * 
  * Script for the bullet functionality

@@ -1,8 +1,15 @@
 using System;
 using UnityEngine;
 using System.Collections;
-using Unity.VisualScripting;
 
+/*
+ * Excercise 03.3: PowerUp.cs
+ * Name: Ka Bo Cheung
+ * Date: 07/20/2026
+ * Course: GAME-1377-001
+ * 
+ * Script for the power up functionality
+ */
 public class PowerUp : MonoBehaviour
 {
     private AsteroidsPlayerController spaceship;
@@ -19,6 +26,7 @@ public class PowerUp : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        // When colliding with certain power ups
         if (collision.CompareTag("StarLife"))
         {
             spaceship.GiveOneLifeUp();
@@ -36,13 +44,21 @@ public class PowerUp : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Gives haste speed to the spaceship
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator GiveHaste()
     {
-        spaceship.powerMultiplier = hasteMultiplier;
+        spaceship.PowerMultiplier = hasteMultiplier;
         yield return new WaitForSeconds(hasteTime);
-        spaceship.powerMultiplier = 1.0f;
+        spaceship.PowerMultiplier = 1.0f;
     }
 
+    /// <summary>
+    /// Gives triple blasters to the spaceship
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator GiveTriBlasters()
     {
         IsOnTripleBlastMode = true;
@@ -50,6 +66,11 @@ public class PowerUp : MonoBehaviour
         IsOnTripleBlastMode = false;
     }
 
+    /// <summary>
+    /// Set up two new instantiated blasters on the spaceship
+    /// </summary>
+    /// <param name="bulletPrefab"></param>
+    /// <param name="firePoint"></param>
     public void UseTriBlasters(GameObject bulletPrefab, Transform firePoint)
     {
         Instantiate(bulletPrefab, firePoint.position + (transform.right * sideBlasterCloseness), firePoint.rotation);

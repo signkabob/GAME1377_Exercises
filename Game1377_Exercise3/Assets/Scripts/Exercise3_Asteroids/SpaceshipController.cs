@@ -16,7 +16,7 @@ public class AsteroidsPlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private PowerUp powerUp;
 
-    public State currentState;
+    public State CurrentState;
     
     [SerializeField] private int numOfLife = 3;
     [SerializeField] private float rotationSpeed = 360f;
@@ -25,7 +25,7 @@ public class AsteroidsPlayerController : MonoBehaviour
 
     [SerializeField] private float fireCooldownTime = 1.0f;
     [SerializeField] private bool fireOnCooldown = false;
-    public float powerMultiplier = 1.0f;
+    public float PowerMultiplier = 1.0f;
     [SerializeField] private float invincibilityTime = 5.0f;
 
     [SerializeField] private GameObject bulletPrefab;
@@ -47,12 +47,12 @@ public class AsteroidsPlayerController : MonoBehaviour
 
     void Start()
     {
-        currentState = State.Active;
+        CurrentState = State.Active;
     }
 
     void Update()
     {
-        if (currentState != State.Dead)
+        if (CurrentState != State.Dead)
         {
             HandleRotation();
             HandleFire();
@@ -62,7 +62,7 @@ public class AsteroidsPlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (currentState != State.Dead)
+        if (CurrentState != State.Dead)
         {
             HandleThrust();
         }
@@ -74,7 +74,7 @@ public class AsteroidsPlayerController : MonoBehaviour
     private void HandleRotation()
     {
         float rotationInput = Input.GetAxis("Horizontal");
-        transform.Rotate(Vector3.back * rotationInput * rotationSpeed * powerMultiplier * Time.deltaTime);
+        transform.Rotate(Vector3.back * rotationInput * rotationSpeed * PowerMultiplier * Time.deltaTime);
     }
 
     /// <summary>
@@ -85,13 +85,18 @@ public class AsteroidsPlayerController : MonoBehaviour
         float thrustInput = Input.GetAxis("Vertical");
         if (thrustInput > 0)
         {
-            rb.AddForce(transform.up * thrustInput * thrustForce * powerMultiplier);
+            rb.AddForce(transform.up * thrustInput * thrustForce * PowerMultiplier);
+
+            // Displays moving animation and sound
             thrustAnim.Play("ThrustMoveAnim");
-            if (powerMultiplier > 1.0f) 
+            AudioManager.Instance.PlayThrustSound();
+            
+            if (PowerMultiplier > 1.0f) 
             {
                 hasteAnim.gameObject.SetActive(true);
             }
         }
+        // Displays idle animation when not moving
         else
         {
             thrustAnim.Play("ThrustIdleAnim");
@@ -123,7 +128,9 @@ public class AsteroidsPlayerController : MonoBehaviour
         if (!fireOnCooldown)
         {
             gunAnim.Play("GunFireAnim");
+            AudioManager.Instance.PlayFireSound();
             Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+            // Ready triple blasters if having the power up 
             if (powerUp.IsOnTripleBlastMode)
             {
                 powerUp.UseTriBlasters(bulletPrefab, firePoint);
@@ -132,6 +139,10 @@ public class AsteroidsPlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Starts the cooldown for firing the bullet 
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator StartFireCooldown()
     {
         fireOnCooldown = true;
@@ -144,7 +155,7 @@ public class AsteroidsPlayerController : MonoBehaviour
     /// </summary>
     private void HandleHyperspace()
     {
-        if (Input.GetButtonUp("Hyperspace") && currentState != State.Teleporting)
+        if (Input.GetButtonUp("Hyperspace") && CurrentState != State.Teleporting)
         {
             TeleportToRandomLocation();
         }
@@ -156,19 +167,24 @@ public class AsteroidsPlayerController : MonoBehaviour
     {
         float locationX;
         float locationY;
-        State previousState = currentState;
-        currentState = State.Teleporting;
+        State previousState = CurrentState;
+        CurrentState = State.Teleporting;
+
         do
         {
             locationX = Random.Range(ScreenBounds.ScreenLeft, ScreenBounds.ScreenRight);
             locationY = Random.Range(ScreenBounds.ScreenBottom, ScreenBounds.ScreenTop);
             if (IsSafeOnScan(new Vector2(locationX, locationY)))
             {
-                currentState = previousState;
+                CurrentState = previousState;
             }
-        } while (currentState == State.Teleporting);
+        } while (CurrentState == State.Teleporting);
+
+        // Teleports safely and stop moving
+        rb.linearVelocity = Vector3.zero;
         transform.position = new Vector3(locationX, locationY, 0);
         spaceshipAnim.Play("SpaceshipTeleportAnim");
+        AudioManager.Instance.PlayTeleportSound();
     }
 
     /// <summary>
@@ -189,18 +205,30 @@ public class AsteroidsPlayerController : MonoBehaviour
         }
         return safety;
     }
+
+    /// <summary>
+    /// Gives one more live for the player
+    /// </summary>
     public void GiveOneLifeUp()
     {
         numOfLife += 1;
     }
 
+    /// <summary>
+    /// Destroys the spaceship
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator KaboomToDeath()
     {
-        currentState = State.Dead;
+        // The player is dead and should stop moving
+        CurrentState = State.Dead;
         rb.linearVelocity = Vector3.zero;
+        
+        // Must start and finish the explosion animation before the next step
         yield return StartCoroutine(TriggerKaboomAnimation());
         numOfLife -= 1;
-
+        
+        // Game over if no lives left
         if (numOfLife <= 0)
         {
             Destroy(gameObject);
@@ -211,35 +239,39 @@ public class AsteroidsPlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Plays the explosion animation and sound
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator TriggerKaboomAnimation()
     {
         // Start the explosion animation
-        thrustAnim.gameObject.SetActive(false);
-        hasteAnim.gameObject.SetActive(false);
-        gunAnim.gameObject.SetActive(false);
+        AudioManager.Instance.PlayExplosionSound();
         spaceshipAnim.Play("SpaceshipExplosionAnim");
 
-        // Wait for the next frame just in case the transition isn't completed 
-        yield return null;
-
-        // Wait for the animation to end
+        // Wait for the animation to end; Appeared to be sometime buggy and may be related to the animator or the game state
         yield return new WaitForSeconds(spaceshipAnim.GetCurrentAnimatorStateInfo(0).length);
     }
 
+    /// <summary>
+    /// Respawns the spaceship at the origin and give invincibilty
+    /// </summary>
     private void Respawn()
     {
         transform.position = Vector3.zero;
-        thrustAnim.gameObject.SetActive(true);
-        gunAnim.gameObject.SetActive(true);
         StartCoroutine(GiveInvincibility());
     }
 
+    /// <summary>
+    /// Gives damage immunity for the spaceship for certain amount of time 
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator GiveInvincibility()
     {
-        currentState = State.Invincible;
+        CurrentState = State.Invincible;
         spaceshipAnim.Play("SpaceshipRespawnAnim");
         yield return new WaitForSeconds(invincibilityTime);
         spaceshipAnim.Play("SpaceshipActive");
-        currentState = State.Active;
+        CurrentState = State.Active;
     }
 }

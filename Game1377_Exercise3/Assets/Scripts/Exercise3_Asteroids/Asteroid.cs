@@ -1,7 +1,7 @@
 /*
  * Excercise 03.3: Asteroid.cs
  * Name: Ka Bo Cheung
- * Date: 07/19/2026
+ * Date: 07/20/2026
  * Course: GAME-1377-001
  * 
  * Script for the asteroid functionality
@@ -69,7 +69,7 @@ public class Asteroid : MonoBehaviour
         if (collider.gameObject.CompareTag("Player"))
         {
             AsteroidsPlayerController spaceship = collider.GetComponent<AsteroidsPlayerController>();
-            switch (spaceship.currentState) 
+            switch (spaceship.CurrentState) 
             {
                 case AsteroidsPlayerController.State.Active:
                     StartCoroutine(spaceship.KaboomToDeath());
@@ -83,6 +83,10 @@ public class Asteroid : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Set the spawner reference
+    /// </summary>
+    /// <param name="asteroidSpawner">Asteroid spawner</param>
     public void SetAsteroidSpawner(AsteroidSpawner asteroidSpawner)
     {
         spawner = asteroidSpawner;

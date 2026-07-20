@@ -1,7 +1,7 @@
 /*
  * Excercise 03.3: AsteroidSpawner.cs
  * Name: Ka Bo Cheung
- * Date: 07/19/2026
+ * Date: 07/20/2026
  * Course: GAME-1377-001
  * 
  * Script for the asteroid spawner
@@ -19,8 +19,8 @@ public class AsteroidSpawner : MonoBehaviour
     private float spawnYMin = 0f;
     private float playerSafeDistance = 3;
 
-    public GameObject[] asteroidPrefabs;
-    public int numOfAsteroidsToSpawn = 5;
+    public GameObject[] AsteroidPrefabs;
+    [SerializeField] private int numOfAsteroidsToSpawn = 5;
 
     void Start()
     {
@@ -73,7 +73,7 @@ public class AsteroidSpawner : MonoBehaviour
     /// <param name="size">the size of the spawn</param>
     public void SpawnAsteroid(Vector3 position, Asteroid.AsteroidSize size)
     {
-        GameObject asteroidPrefab = asteroidPrefabs[(int) size];
+        GameObject asteroidPrefab = AsteroidPrefabs[(int) size];
         GameObject asteroidSpawn = Instantiate(asteroidPrefab, position, asteroidPrefab.transform.rotation);
         asteroidSpawn.GetComponent<Asteroid>().SetAsteroidSpawner(this);
     }
