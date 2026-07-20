@@ -11,7 +11,7 @@ using System.Collections;
 
 public class AsteroidsPlayerController : MonoBehaviour
 {
-    public enum State { Invalid, Active, Teleporting, Invincible };
+    public enum State { Invalid, Active, Teleporting, Dead, Invincible };
 
     private Rigidbody2D rb;
     private PowerUp powerUp;
@@ -28,8 +28,12 @@ public class AsteroidsPlayerController : MonoBehaviour
     public float powerMultiplier = 1.0f;
     [SerializeField] private float invincibilityTime = 5.0f;
 
-    [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private Transform firePoint;
+    [SerializeField] private Animator thrustAnim;
+    [SerializeField] private Animator hasteAnim;
+    [SerializeField] private Animator explosionAnim;
+
 
     private float rotationInput;
     private float thrustInput;
@@ -47,14 +51,20 @@ public class AsteroidsPlayerController : MonoBehaviour
 
     void Update()
     {
-        HandleRotation();
-        HandleFire();
-        HandleHyperspace();
+        if (currentState != State.Dead)
+        {
+            HandleRotation();
+            HandleFire();
+            HandleHyperspace();
+        }
     }
 
     void FixedUpdate()
     {
-        HandleThrust();
+        if (currentState != State.Dead)
+        {
+            HandleThrust();
+        }
     }
 
     /// <summary>
@@ -75,6 +85,16 @@ public class AsteroidsPlayerController : MonoBehaviour
         if (thrustInput > 0)
         {
             rb.AddForce(transform.up * thrustInput * thrustForce * powerMultiplier);
+            thrustAnim.Play("ThrustMoveAnim");
+            if (powerMultiplier > 1.0f) 
+            {
+                hasteAnim.Play("ThrustHasteAnim");
+            }
+        }
+        else
+        {
+            thrustAnim.Play("ThrustIdleAnim");
+            hasteAnim.Play("ThrustNormal");
         }
     }
 
@@ -172,9 +192,13 @@ public class AsteroidsPlayerController : MonoBehaviour
     }
 
 
-    public void KaboomToDeath()
+    public IEnumerator KaboomToDeath()
     {
+        currentState = State.Dead;
+        rb.linearVelocity = Vector3.zero;
+        yield return StartCoroutine(TriggerKaboomAnimation());
         numOfLife -= 1;
+
         if (numOfLife <= 0)
         {
             Destroy(gameObject);
@@ -183,6 +207,20 @@ public class AsteroidsPlayerController : MonoBehaviour
         {
             Respawn();
         }
+    }
+
+    private IEnumerator TriggerKaboomAnimation()
+    {
+        // Start the explosion animation
+        explosionAnim.gameObject.SetActive(true);
+        explosionAnim.Play("SpaceshipExplosionAnim");
+
+        // Wait for 1 frame so the animator shifts to the new state
+        yield return null;
+
+        // Wait for the animation to end
+        yield return new WaitForSeconds(explosionAnim.GetCurrentAnimatorStateInfo(0).length);
+        explosionAnim.gameObject.SetActive(false);
     }
 
     private void Respawn()
