@@ -74,9 +74,6 @@ public class Asteroid : MonoBehaviour
                 case AsteroidsPlayerController.State.Active:
                     StartCoroutine(spaceship.KaboomToDeath());
                     break;
-                case AsteroidsPlayerController.State.Invincible:
-                    Debug.Log("STARPOWER");
-                    break;
             }
         }
 

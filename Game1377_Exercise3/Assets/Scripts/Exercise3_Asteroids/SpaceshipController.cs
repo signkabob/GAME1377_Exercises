@@ -1,7 +1,7 @@
 /*
  * Excercise 03.3: SpaceshipController.cs
  * Name: Ka Bo Cheung
- * Date: 07/19/2026
+ * Date: 07/20/2026
  * Course: GAME-1377-001
  * 
  * Script for the spaceship to thrust forward, change its rotation, and fire bullets
@@ -33,7 +33,7 @@ public class AsteroidsPlayerController : MonoBehaviour
     [SerializeField] private Animator spaceshipAnim;
     [SerializeField] private Animator thrustAnim;
     [SerializeField] private Animator hasteAnim;
-
+    [SerializeField] private Animator gunAnim;
 
     private float rotationInput;
     private float thrustInput;
@@ -122,6 +122,7 @@ public class AsteroidsPlayerController : MonoBehaviour
         }
         if (!fireOnCooldown)
         {
+            gunAnim.Play("GunFireAnim");
             Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
             if (powerUp.IsOnTripleBlastMode)
             {
@@ -167,6 +168,7 @@ public class AsteroidsPlayerController : MonoBehaviour
             }
         } while (currentState == State.Teleporting);
         transform.position = new Vector3(locationX, locationY, 0);
+        spaceshipAnim.Play("SpaceshipTeleportAnim");
     }
 
     /// <summary>
@@ -192,16 +194,12 @@ public class AsteroidsPlayerController : MonoBehaviour
         numOfLife += 1;
     }
 
-
     public IEnumerator KaboomToDeath()
     {
         currentState = State.Dead;
         rb.linearVelocity = Vector3.zero;
         yield return StartCoroutine(TriggerKaboomAnimation());
         numOfLife -= 1;
-
-        // Wait for the next frame just in case the transition isn't completed. 
-        yield return null;
 
         if (numOfLife <= 0)
         {
@@ -218,9 +216,10 @@ public class AsteroidsPlayerController : MonoBehaviour
         // Start the explosion animation
         thrustAnim.gameObject.SetActive(false);
         hasteAnim.gameObject.SetActive(false);
+        gunAnim.gameObject.SetActive(false);
         spaceshipAnim.Play("SpaceshipExplosionAnim");
 
-        // Wait for 1 frame so the animator shifts to the new state
+        // Wait for the next frame just in case the transition isn't completed 
         yield return null;
 
         // Wait for the animation to end
@@ -231,6 +230,7 @@ public class AsteroidsPlayerController : MonoBehaviour
     {
         transform.position = Vector3.zero;
         thrustAnim.gameObject.SetActive(true);
+        gunAnim.gameObject.SetActive(true);
         StartCoroutine(GiveInvincibility());
     }
 
