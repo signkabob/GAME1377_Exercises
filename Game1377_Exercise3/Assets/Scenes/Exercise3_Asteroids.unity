@@ -996,6 +996,10 @@ PrefabInstance:
       propertyPath: sideBlasterPostion.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1554287414093694704, guid: b5bed9ac15f324145b2fdce28eb50970, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2357516278731701826, guid: b5bed9ac15f324145b2fdce28eb50970, type: 3}
       propertyPath: m_Name
       value: Spaceship
@@ -1041,7 +1045,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 9206230511163426244, guid: b5bed9ac15f324145b2fdce28eb50970, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2357516278731701826, guid: b5bed9ac15f324145b2fdce28eb50970, type: 3}

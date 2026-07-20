@@ -30,9 +30,9 @@ public class AsteroidsPlayerController : MonoBehaviour
 
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform firePoint;
+    [SerializeField] private Animator spaceshipAnim;
     [SerializeField] private Animator thrustAnim;
     [SerializeField] private Animator hasteAnim;
-    [SerializeField] private Animator explosionAnim;
 
 
     private float rotationInput;
@@ -42,6 +42,7 @@ public class AsteroidsPlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         powerUp = GetComponent<PowerUp>();
+        spaceshipAnim = GetComponent<Animator>();
     }
 
     void Start()
@@ -88,13 +89,13 @@ public class AsteroidsPlayerController : MonoBehaviour
             thrustAnim.Play("ThrustMoveAnim");
             if (powerMultiplier > 1.0f) 
             {
-                hasteAnim.Play("ThrustHasteAnim");
+                hasteAnim.gameObject.SetActive(true);
             }
         }
         else
         {
             thrustAnim.Play("ThrustIdleAnim");
-            hasteAnim.Play("ThrustNormal");
+            hasteAnim.gameObject.SetActive(false);
         }
     }
 
@@ -199,6 +200,9 @@ public class AsteroidsPlayerController : MonoBehaviour
         yield return StartCoroutine(TriggerKaboomAnimation());
         numOfLife -= 1;
 
+        // Wait for the next frame just in case the transition isn't completed. 
+        yield return null;
+
         if (numOfLife <= 0)
         {
             Destroy(gameObject);
@@ -212,27 +216,30 @@ public class AsteroidsPlayerController : MonoBehaviour
     private IEnumerator TriggerKaboomAnimation()
     {
         // Start the explosion animation
-        explosionAnim.gameObject.SetActive(true);
-        explosionAnim.Play("SpaceshipExplosionAnim");
+        thrustAnim.gameObject.SetActive(false);
+        hasteAnim.gameObject.SetActive(false);
+        spaceshipAnim.Play("SpaceshipExplosionAnim");
 
         // Wait for 1 frame so the animator shifts to the new state
         yield return null;
 
         // Wait for the animation to end
-        yield return new WaitForSeconds(explosionAnim.GetCurrentAnimatorStateInfo(0).length);
-        explosionAnim.gameObject.SetActive(false);
+        yield return new WaitForSeconds(spaceshipAnim.GetCurrentAnimatorStateInfo(0).length);
     }
 
     private void Respawn()
     {
         transform.position = Vector3.zero;
+        thrustAnim.gameObject.SetActive(true);
         StartCoroutine(GiveInvincibility());
     }
 
     private IEnumerator GiveInvincibility()
     {
         currentState = State.Invincible;
+        spaceshipAnim.Play("SpaceshipRespawnAnim");
         yield return new WaitForSeconds(invincibilityTime);
+        spaceshipAnim.Play("SpaceshipActive");
         currentState = State.Active;
     }
 }
