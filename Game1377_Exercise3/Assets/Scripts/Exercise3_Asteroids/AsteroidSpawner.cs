@@ -20,7 +20,10 @@ public class AsteroidSpawner : MonoBehaviour
     private float playerSafeDistance = 3;
 
     public GameObject[] AsteroidPrefabs;
+    public GameObject[] PowerUpPrefabs;
     [SerializeField] private int numOfAsteroidsToSpawn = 5;
+    [SerializeField] private float chanceOfPowerUpSpawn = 0.20f;
+
 
     void Start()
     {
@@ -76,5 +79,15 @@ public class AsteroidSpawner : MonoBehaviour
         GameObject asteroidPrefab = AsteroidPrefabs[(int) size];
         GameObject asteroidSpawn = Instantiate(asteroidPrefab, position, asteroidPrefab.transform.rotation);
         asteroidSpawn.GetComponent<Asteroid>().SetAsteroidSpawner(this);
+        if (Random.Range(0.0f, 1.0f) < chanceOfPowerUpSpawn)
+        {
+            SpawnPowerUp(position);
+        }
+    }
+
+    private void SpawnPowerUp(Vector3 position)
+    {
+        GameObject powerUpPrefab = PowerUpPrefabs[Random.Range(0, PowerUpPrefabs.Length)];
+        Instantiate(powerUpPrefab, position, powerUpPrefab.transform.rotation);
     }
 }

@@ -16,6 +16,8 @@ public class Asteroid : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private float minRotationSpeed = -180f;
     [SerializeField] private float maxRotationSpeed = 180f;
+    [SerializeField] private int numOfSpawnChild = 2;
+    [SerializeField] private string explosionAnimationState = "AsteroidExplosionAnim";
 
     private Rigidbody2D rb;
     private AsteroidSpawner spawner;
@@ -44,7 +46,7 @@ public class Asteroid : MonoBehaviour
             SpawnChildren(size - 1);
         }
         Animator animator = GetComponent<Animator>();
-        animator.Play("AsteroidExplosionAnim");
+        animator.Play(explosionAnimationState);
         Destroy(gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
     }
 
@@ -54,7 +56,7 @@ public class Asteroid : MonoBehaviour
     /// <param name="childSize">next lesser size of the spawn</param>
     private void SpawnChildren(AsteroidSize childSize)
     {
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < numOfSpawnChild; i++)
         {
             spawner.SpawnAsteroid(transform.position, childSize);
         }

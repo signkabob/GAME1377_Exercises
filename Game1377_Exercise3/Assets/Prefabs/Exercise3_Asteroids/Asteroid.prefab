@@ -175,6 +175,8 @@ MonoBehaviour:
   speed: 2
   minRotationSpeed: -180
   maxRotationSpeed: 180
+  numOfSpawnChild: 2
+  explosionAnimationState: AsteroidExplosionAnim
 --- !u!114 &-3732927969261725758
 MonoBehaviour:
   m_ObjectHideFlags: 0
