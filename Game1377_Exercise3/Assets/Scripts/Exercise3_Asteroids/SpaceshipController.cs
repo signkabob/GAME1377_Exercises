@@ -232,10 +232,10 @@ public class AsteroidsPlayerController : MonoBehaviour
         // The player is dead and should stop moving
         CurrentState = State.Dead;
         rb.linearVelocity = Vector3.zero;
-        
+        scoreManager.updateNumOfLives(-1);
+
         // Must start and finish the explosion animation before the next step
         yield return StartCoroutine(TriggerKaboomAnimation());
-        scoreManager.updateNumOfLives(-1);
         
         // Game over if no lives left
         if (scoreManager.NumOfLives <= 0)
@@ -258,7 +258,7 @@ public class AsteroidsPlayerController : MonoBehaviour
         AudioManager.Instance.PlayExplosionSound();
         spaceshipAnim.Play(spaceshipExplosionState);
 
-        // Wait for the animation to end; Appeared to be sometime buggy and may be related to the animator or the game state
+        // Wait for the animation to end; Appeared to be sometime buggy and may be related to multiple sudden collisions with asteroids
         yield return new WaitForSeconds(spaceshipAnim.GetCurrentAnimatorStateInfo(0).length);
     }
 

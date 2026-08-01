@@ -22,6 +22,7 @@ public class Asteroid : MonoBehaviour
 
     private Rigidbody2D rb;
     private AsteroidSpawner spawner;
+    private ScoreManager score;
     private Vector2 velocity;
 
     void Start()
@@ -42,6 +43,7 @@ public class Asteroid : MonoBehaviour
     /// </summary>
     private void BreakAsteroid()
     {
+        score.AddScore(size);
         if (size != AsteroidSize.Small)
         {
             SpawnChildren(size - 1);
@@ -72,11 +74,9 @@ public class Asteroid : MonoBehaviour
         if (collider.gameObject.CompareTag("Player"))
         {
             AsteroidsPlayerController spaceship = collider.GetComponent<AsteroidsPlayerController>();
-            switch (spaceship.CurrentState) 
+            if (spaceship.CurrentState == AsteroidsPlayerController.State.Active) 
             {
-                case AsteroidsPlayerController.State.Active:
-                    StartCoroutine(spaceship.KaboomToDeath());
-                    break;
+                StartCoroutine(spaceship.KaboomToDeath());
             }
         }
 
@@ -93,5 +93,10 @@ public class Asteroid : MonoBehaviour
     public void SetAsteroidSpawner(AsteroidSpawner asteroidSpawner)
     {
         spawner = asteroidSpawner;
+    }
+
+    public void SetScoreManager(ScoreManager scoreManager)
+    {
+        score = scoreManager;
     }
 }

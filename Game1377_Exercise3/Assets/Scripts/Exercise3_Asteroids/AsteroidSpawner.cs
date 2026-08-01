@@ -7,6 +7,7 @@
  * Script for the asteroid spawner
  */
 using NUnit.Framework.Internal;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class AsteroidSpawner : MonoBehaviour
@@ -24,6 +25,7 @@ public class AsteroidSpawner : MonoBehaviour
     [SerializeField] private int numOfAsteroidsToSpawn = 5;
     [SerializeField] private float chanceOfPowerUpSpawn = 0.20f;
 
+    [SerializeField] private ScoreManager scoreManager;
 
     void Start()
     {
@@ -77,8 +79,10 @@ public class AsteroidSpawner : MonoBehaviour
     public void SpawnAsteroid(Vector3 position, Asteroid.AsteroidSize size)
     {
         GameObject asteroidPrefab = AsteroidPrefabs[(int) size];
-        GameObject asteroidSpawn = Instantiate(asteroidPrefab, position, asteroidPrefab.transform.rotation);
-        asteroidSpawn.GetComponent<Asteroid>().SetAsteroidSpawner(this);
+        Asteroid asteroidSpawn = Instantiate(asteroidPrefab, position, asteroidPrefab.transform.rotation).GetComponent<Asteroid>();
+        asteroidSpawn.SetAsteroidSpawner(this);
+        asteroidSpawn.SetScoreManager(scoreManager);
+        
         if (Random.Range(0.0f, 1.0f) < chanceOfPowerUpSpawn)
         {
             SpawnPowerUp(position);

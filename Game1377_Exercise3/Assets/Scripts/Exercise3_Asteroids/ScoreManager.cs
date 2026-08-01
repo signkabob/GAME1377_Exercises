@@ -24,6 +24,7 @@ public class ScoreManager : MonoBehaviour
     public void AddScore(Asteroid.AsteroidSize size)
     {
         Score += sizePoints[(int)size];
+        Debug.Log(Score);
         hud.UpdateScore(Score);
     }
 
