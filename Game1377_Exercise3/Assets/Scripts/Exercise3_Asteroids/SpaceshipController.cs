@@ -63,6 +63,7 @@ public class AsteroidsPlayerController : MonoBehaviour
     {
         if (CurrentState != State.Dead)
         {
+            CheckPause();
             rotationInput = Input.GetAxis("Horizontal");
             thrustInput = Input.GetAxis("Vertical");
             HandleRotation();
@@ -121,6 +122,22 @@ public class AsteroidsPlayerController : MonoBehaviour
         if (Input.GetButtonDown("Fire"))
         {
             FireBullet();
+        }
+    }
+
+    private void CheckPause()
+    {
+        if (Input.GetButtonDown("Pause"))
+        {
+            HUDManager hudManager = GameManager.Instance.HUDManager;
+            if (hudManager.IsPaused)
+            {
+                GameManager.Instance.HUDManager.Unpause();
+            }
+            else
+            {
+                GameManager.Instance.HUDManager.Pause();
+            }
         }
     }
 
@@ -240,6 +257,7 @@ public class AsteroidsPlayerController : MonoBehaviour
         // Game over if no lives left
         if (scoreManager.NumOfLives <= 0)
         {
+            GameManager.Instance.TriggerGameOver();
             Destroy(gameObject);
         }
         else

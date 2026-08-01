@@ -29,4 +29,9 @@ public class GameManager : MonoBehaviour
             HUDManager = FindAnyObjectByType<HUDManager>();
         }
     }
+
+    public void TriggerGameOver()
+    {
+        IsGameOver = true;
+    }
 }
