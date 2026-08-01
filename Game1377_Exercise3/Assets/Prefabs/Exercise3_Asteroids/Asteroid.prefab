@@ -172,6 +172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Asteroid
   size: 1
+  points: 50
   speed: 2
   minRotationSpeed: -180
   maxRotationSpeed: 180

@@ -7,6 +7,7 @@
  * Script for the asteroid functionality
  */
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class Asteroid : MonoBehaviour
 {

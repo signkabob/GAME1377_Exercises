@@ -18,7 +18,6 @@ public class AsteroidsPlayerController : MonoBehaviour
 
     public State CurrentState;
     
-    [SerializeField] private int numOfLife = 3;
     [SerializeField] private float rotationSpeed = 360f;
     [SerializeField] private float thrustForce = 500f;
     [SerializeField] private float playerSafeDistance = 3;
@@ -42,6 +41,8 @@ public class AsteroidsPlayerController : MonoBehaviour
     [SerializeField] private Animator gunAnim;
     [SerializeField] private string gunFireState = "GunFireAnim";
     [SerializeField] private Animator hasteAnim;
+
+    [SerializeField] ScoreManager scoreManager;
 
     private float rotationInput;
     private float thrustInput;
@@ -219,7 +220,7 @@ public class AsteroidsPlayerController : MonoBehaviour
     /// </summary>
     public void GiveOneLifeUp()
     {
-        numOfLife += 1;
+        scoreManager.updateNumOfLives(1);
     }
 
     /// <summary>
@@ -234,10 +235,10 @@ public class AsteroidsPlayerController : MonoBehaviour
         
         // Must start and finish the explosion animation before the next step
         yield return StartCoroutine(TriggerKaboomAnimation());
-        numOfLife -= 1;
+        scoreManager.updateNumOfLives(-1);
         
         // Game over if no lives left
-        if (numOfLife <= 0)
+        if (scoreManager.NumOfLives <= 0)
         {
             Destroy(gameObject);
         }
