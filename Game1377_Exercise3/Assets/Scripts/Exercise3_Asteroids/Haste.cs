@@ -1,6 +1,13 @@
 using UnityEngine;
 using System.Collections;
-
+/*
+ * Excercise 03.4: Haste.cs
+ * Name: Ka Bo Cheung
+ * Date: 08/01/2026
+ * Course: GAME-1377-001
+ * 
+ * Script for the Haste power up functionality
+ */
 public class Haste : PowerUp
 {
     [SerializeField] private float hasteTime = 10.0f;

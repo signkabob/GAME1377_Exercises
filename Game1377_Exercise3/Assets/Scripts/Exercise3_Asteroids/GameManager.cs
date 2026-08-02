@@ -1,5 +1,13 @@
 using UnityEngine;
 
+/*
+ * Excercise 03.4: GameManager.cs
+ * Name: Ka Bo Cheung
+ * Date: 08/01/2026
+ * Course: GAME-1377-001
+ * 
+ * Script for the game manager 
+ */
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
@@ -30,6 +38,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Trigger the game over state
+    /// </summary>
     public void TriggerGameOver()
     {
         IsGameOver = true;

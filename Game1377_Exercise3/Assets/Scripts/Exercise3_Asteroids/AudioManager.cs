@@ -1,10 +1,9 @@
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 
 /*
- * Excercise 03.3: AudioManager.cs
+ * Excercise 03.4: AudioManager.cs
  * Name: Ka Bo Cheung
- * Date: 07/20/2026
+ * Date: 08/01/2026
  * Course: GAME-1377-001
  * 
  * Script for the audio manager
@@ -45,6 +44,9 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Plays the background music
+    /// </summary>
     private void PlayBackgroundMusic()
     {
         MusicSource.clip = backgroundMusic;
@@ -86,6 +88,9 @@ public class AudioManager : MonoBehaviour
         SFXSource.PlayOneShot(explosionSound);
     }
 
+    /// <summary>
+    /// Play the button sound
+    /// </summary>
     public void PlayButtonSound()
     {
         SFXSource.PlayOneShot(buttonSound);

@@ -1,15 +1,14 @@
+
+using UnityEngine;
+
 /*
- * Excercise 03.3: AsteroidSpawner.cs
+ * Excercise 03.4: AsteroidSpawner.cs
  * Name: Ka Bo Cheung
- * Date: 07/20/2026
+ * Date: 08/01/2026
  * Course: GAME-1377-001
  * 
  * Script for the asteroid spawner
  */
-using NUnit.Framework.Internal;
-using Unity.VisualScripting;
-using UnityEngine;
-
 public class AsteroidSpawner : MonoBehaviour
 {
     // These variables determine the spawn area for the asteroids.
@@ -90,6 +89,10 @@ public class AsteroidSpawner : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Spawn an powerup by a chance when the asteroid is destroyed
+    /// </summary>
+    /// <param name="position">The position of the asteroid</param>
     private void SpawnPowerUp(Vector3 position)
     {
         GameObject powerUpPrefab = PowerUpPrefabs[Random.Range(0, PowerUpPrefabs.Length)];

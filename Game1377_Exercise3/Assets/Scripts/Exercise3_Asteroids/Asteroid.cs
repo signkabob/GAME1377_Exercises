@@ -1,13 +1,13 @@
+using UnityEngine;
+
 /*
- * Excercise 03.3: Asteroid.cs
+ * Excercise 03.4: Asteroid.cs
  * Name: Ka Bo Cheung
- * Date: 07/20/2026
+ * Date: 08/01/2026
  * Course: GAME-1377-001
  * 
  * Script for the asteroid functionality
  */
-using UnityEngine;
-
 public class Asteroid : MonoBehaviour
 {
     public enum AsteroidSize { Small, Medium, Large }
@@ -83,6 +83,7 @@ public class Asteroid : MonoBehaviour
 
         if (collider.gameObject.CompareTag("Bullet") && !hasExploded)
         {
+            // Make sure it no longer collides when the asteroid is destroyed. 
             hasExploded = true;
             BreakAsteroid();
         }
@@ -97,6 +98,10 @@ public class Asteroid : MonoBehaviour
         spawner = asteroidSpawner;
     }
 
+    /// <summary>
+    /// Set the score manager
+    /// </summary>
+    /// <param name="scoreManager">Score manager</param>
     public void SetScoreManager(ScoreManager scoreManager)
     {
         score = scoreManager;

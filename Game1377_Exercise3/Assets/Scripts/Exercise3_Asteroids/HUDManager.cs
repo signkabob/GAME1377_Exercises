@@ -1,6 +1,14 @@
 using TMPro;
 using UnityEngine;
 
+/*
+ * Excercise 03.4: HUDManager.cs
+ * Name: Ka Bo Cheung
+ * Date: 08/01/2026
+ * Course: GAME-1377-001
+ * 
+ * Script for managing HUD and UI controls
+ */
 public class HUDManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI scoreText;
@@ -16,17 +24,28 @@ public class HUDManager : MonoBehaviour
         IsPaused = false;
         menuText.SetText("Pause");
     }
-
+    
+    /// <summary>
+    /// Update the score text
+    /// </summary>
+    /// <param name="newScore">Updated score</param>
     public void UpdateScore(int newScore)
     {
         scoreText.SetText("Score: {0:000}", newScore);
     }
 
+    /// <summary>
+    /// Update the number of lives text
+    /// </summary>
+    /// <param name="newLives">Updated number of lives</param>
     public void UpdateLives(int newLives)
     {
         livesText.SetText("Lives: {0:0}", newLives);
     }
 
+    /// <summary>
+    /// Display the pause screen
+    /// </summary>
     public void Pause()
     {
         IsPaused = !IsPaused;
@@ -42,6 +61,9 @@ public class HUDManager : MonoBehaviour
         pauseMenu.SetActive(IsPaused);
     }
 
+    /// <summary>
+    /// Undisplay the pause screen
+    /// </summary>
     public void Unpause()
     {
         IsPaused = false;
@@ -49,6 +71,10 @@ public class HUDManager : MonoBehaviour
         Time.timeScale = 1;
     }
 
+    /// <summary>
+    /// Display the game over screen
+    /// </summary>
+    /// <param name="finalScore"></param>
     public void GameOverScreen(int finalScore)
     {
         pauseMenu.SetActive(true);

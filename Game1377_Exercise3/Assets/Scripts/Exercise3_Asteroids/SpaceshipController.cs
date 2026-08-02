@@ -1,23 +1,23 @@
+using UnityEngine;
+using System.Collections;
+
 /*
- * Excercise 03.3: SpaceshipController.cs
+ * Excercise 03.4: SpaceshipController.cs
  * Name: Ka Bo Cheung
  * Date: 08/01/2026
  * Course: GAME-1377-001
  * 
  * Script for the spaceship to thrust forward, change its rotation, and fire bullets
  */
-using UnityEngine;
-using System.Collections;
-
 public class AsteroidsPlayerController : MonoBehaviour
 {
     public enum State { Invalid, Active, Teleporting, Dead, Invincible };
 
     private Rigidbody2D rb;
-    private PowerUp powerUp;
 
     public State CurrentState;
-    
+    [SerializeField] ScoreManager scoreManager;
+
     [SerializeField] private float rotationSpeed = 360f;
     [SerializeField] private float thrustForce = 500f;
     [SerializeField] private float playerSafeDistance = 3;
@@ -45,15 +45,12 @@ public class AsteroidsPlayerController : MonoBehaviour
     [SerializeField] private string gunFireState = "GunFireAnim";
     [SerializeField] private Animator hasteAnim;
 
-    [SerializeField] ScoreManager scoreManager;
-
     private float rotationInput;
     private float thrustInput;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        powerUp = GetComponent<PowerUp>();
         spaceshipAnim = GetComponent<Animator>();
     }
 
@@ -118,7 +115,7 @@ public class AsteroidsPlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Press Space Bar to fire the bullet
+    /// Press 'Fire' to fire the bullet
     /// </summary>
     private void HandleFire()
     {
@@ -128,6 +125,9 @@ public class AsteroidsPlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Press 'Pause' to pause the game
+    /// </summary>
     private void HandlePause()
     {
         if (Input.GetButtonDown("Pause"))
@@ -290,7 +290,7 @@ public class AsteroidsPlayerController : MonoBehaviour
         AudioManager.Instance.PlayExplosionSound();
         spaceshipAnim.Play(spaceshipExplosionState);
 
-        // Wait for the animation to end; Appeared to be sometime buggy and may be related to multiple sudden collisions with asteroids
+        // Wait for the animation to end;
         yield return new WaitForSeconds(spaceshipAnim.GetCurrentAnimatorStateInfo(0).length);
     }
 

@@ -1,3 +1,5 @@
+using UnityEngine;
+
 /*
  * Excercise 03.3: Bullet.cs
  * Name: Ka Bo Cheung
@@ -6,8 +8,6 @@
  * 
  * Script for the bullet functionality
  */
-using UnityEngine;
-
 [RequireComponent(typeof(Rigidbody2D))]
 public class Bullet : MonoBehaviour
 {
