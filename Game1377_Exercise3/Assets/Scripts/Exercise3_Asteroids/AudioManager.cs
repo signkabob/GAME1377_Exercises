@@ -13,11 +13,16 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance {  get; private set; }
 
-    [SerializeField] private AudioSource audioSource;
+
+    [SerializeField] public AudioSource MusicSource;
+    [SerializeField] public AudioSource SFXSource;
+
+    [SerializeField] private AudioClip backgroundMusic;
     [SerializeField] private AudioClip fireSound;
     [SerializeField] private AudioClip thrustSound;
     [SerializeField] private AudioClip teleportSound;
     [SerializeField] private AudioClip explosionSound;
+    [SerializeField] private AudioClip buttonSound;
 
     void Awake()
     {
@@ -27,7 +32,23 @@ public class AudioManager : MonoBehaviour
         }
         Instance = this;
 
-        audioSource = GetComponent<AudioSource>();
+        DontDestroyOnLoad(gameObject);
+    }
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        if (backgroundMusic != null)
+        {
+            PlayBackgroundMusic();
+        }
+    }
+
+    private void PlayBackgroundMusic()
+    {
+        MusicSource.clip = backgroundMusic;
+        MusicSource.loop = true;
+        MusicSource.Play();
     }
 
     /// <summary>
@@ -35,7 +56,7 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     public void PlayFireSound()
     {
-        audioSource.PlayOneShot(fireSound);
+        SFXSource.PlayOneShot(fireSound);
     }
     /// <summary>
     /// Plays thrusting booster sound
@@ -43,9 +64,9 @@ public class AudioManager : MonoBehaviour
     public void PlayThrustSound()
     {
         // Because thrust is used during Update(), the sound needs not to be overlay 
-        if (!audioSource.isPlaying)
+        if (!SFXSource.isPlaying)
         {
-            audioSource.PlayOneShot(thrustSound);
+            SFXSource.PlayOneShot(thrustSound);
         }
     }
     /// <summary>
@@ -53,7 +74,7 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     public void PlayTeleportSound()
     {
-        audioSource.PlayOneShot(teleportSound);
+        SFXSource.PlayOneShot(teleportSound);
     }
 
     /// <summary>
@@ -61,7 +82,11 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     public void PlayExplosionSound()
     {
-        audioSource.PlayOneShot(explosionSound);
+        SFXSource.PlayOneShot(explosionSound);
     }
 
+    public void PlayButtonSound()
+    {
+        SFXSource.PlayOneShot(buttonSound);
+    }
 }
