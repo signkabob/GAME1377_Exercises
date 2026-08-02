@@ -29,7 +29,10 @@ public class AsteroidsPlayerController : MonoBehaviour
 
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform firePoint;
-    
+
+    public bool IsOnTripleBlastMode = false;
+    [SerializeField] private float sideBlasterCloseness = 0.4f;
+
     [SerializeField] private Animator spaceshipAnim;
     [SerializeField] private string spaceshipActiveState = "SpaceshipActive";
     [SerializeField] private string spaceshipRespawnState = "SpaceshipRespawnAnim";
@@ -157,9 +160,9 @@ public class AsteroidsPlayerController : MonoBehaviour
             AudioManager.Instance.PlayFireSound();
             Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
             // Ready triple blasters if having the power up 
-            if (powerUp.IsOnTripleBlastMode)
+            if (IsOnTripleBlastMode)
             {
-                powerUp.UseTriBlasters(bulletPrefab, firePoint);
+                UseTriBlasters(bulletPrefab, firePoint);
             }
             StartCoroutine(StartFireCooldown());
         }
@@ -174,6 +177,17 @@ public class AsteroidsPlayerController : MonoBehaviour
         fireOnCooldown = true;
         yield return new WaitForSeconds(fireCooldownTime);
         fireOnCooldown = false;
+    }
+
+    /// <summary>
+    /// Set up two new instantiated blasters on the spaceship
+    /// </summary>
+    /// <param name="bulletPrefab"></param>
+    /// <param name="firePoint"></param>
+    private void UseTriBlasters(GameObject bulletPrefab, Transform firePoint)
+    {
+        Instantiate(bulletPrefab, firePoint.position + (transform.right * sideBlasterCloseness), firePoint.rotation);
+        Instantiate(bulletPrefab, firePoint.position - (transform.right * sideBlasterCloseness), firePoint.rotation);
     }
 
     /// <summary>

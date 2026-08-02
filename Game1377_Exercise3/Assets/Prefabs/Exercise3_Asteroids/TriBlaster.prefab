@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8597176075678854111}
   - component: {fileID: 1973316946614221705}
   - component: {fileID: 6737429497778994642}
+  - component: {fileID: -8083309274827675235}
   m_Layer: 0
   m_Name: TriBlaster
   m_TagString: TriBlaster
@@ -161,3 +162,16 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.24900818, y: 0.23681092}
   m_EdgeRadius: 0
+--- !u!114 &-8083309274827675235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2544360741617673983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d18b5e413c6d5854286d56ed4519a758, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TripleBlasters
+  triBlastTime: 10
