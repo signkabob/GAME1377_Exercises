@@ -56,25 +56,4 @@ public class HUDManager : MonoBehaviour
         pauseMenu.SetActive(true);
         menuText.SetText("GAME OVER\nScore: {0:000}", finalScore);
     }
-
-    public void RestartGame()
-    {
-        // Resets the time scale in case the game was paused 
-        Time.timeScale = 1f;
-
-        // Reloads the currently active scene
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-
-    public void QuitGame()
-    {
-        // Logs a message in the console to confirm it works in the editor
-        Debug.Log("Game is exiting...");
-
-        // Quits the actual application build
-        Application.Quit();
-
-        // Quits the play mode in the editor 
-        UnityEditor.EditorApplication.ExitPlaymode();
-    }
 }
