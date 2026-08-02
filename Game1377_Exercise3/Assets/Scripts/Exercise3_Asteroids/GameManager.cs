@@ -33,5 +33,6 @@ public class GameManager : MonoBehaviour
     public void TriggerGameOver()
     {
         IsGameOver = true;
+        HUDManager.GameOverScreen(scoreManager.Score);
     }
 }

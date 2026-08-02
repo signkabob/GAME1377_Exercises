@@ -61,9 +61,9 @@ public class AsteroidsPlayerController : MonoBehaviour
 
     void Update()
     {
+        HandlePause();
         if (CurrentState != State.Dead)
         {
-            CheckPause();
             rotationInput = Input.GetAxis("Horizontal");
             thrustInput = Input.GetAxis("Vertical");
             HandleRotation();
@@ -125,7 +125,7 @@ public class AsteroidsPlayerController : MonoBehaviour
         }
     }
 
-    private void CheckPause()
+    private void HandlePause()
     {
         if (Input.GetButtonDown("Pause"))
         {
