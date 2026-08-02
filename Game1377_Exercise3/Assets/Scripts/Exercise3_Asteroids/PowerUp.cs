@@ -10,14 +10,16 @@ using UnityEngine;
  */
 public class PowerUp : MonoBehaviour
 {
+    private bool hasTriggered = false;
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // When colliding with certain power ups
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag("Player") && !hasTriggered)
         {
+            hasTriggered = true;
+            GetComponent<SpriteRenderer>().enabled = false;
             AsteroidsPlayerController spaceship = collision.GetComponent<AsteroidsPlayerController>();
             givePowerUp(spaceship);
-            Destroy(gameObject);
         }
     }
 

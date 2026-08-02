@@ -19,5 +19,6 @@ public class TripleBlasters : PowerUp
         spaceship.IsOnTripleBlastMode = true;
         yield return new WaitForSeconds(triBlastTime);
         spaceship.IsOnTripleBlastMode = false;
+        Destroy(gameObject);
     }
 }

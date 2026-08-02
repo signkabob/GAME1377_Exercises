@@ -7,7 +7,6 @@
  * Script for the asteroid functionality
  */
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 
 public class Asteroid : MonoBehaviour
 {
@@ -24,6 +23,7 @@ public class Asteroid : MonoBehaviour
     private AsteroidSpawner spawner;
     private ScoreManager score;
     private Vector2 velocity;
+    private bool hasExploded = false;
 
     void Start()
     {
@@ -50,6 +50,7 @@ public class Asteroid : MonoBehaviour
         }
         Animator animator = GetComponent<Animator>();
         animator.Play(explosionAnimationState);
+        score.updateNumOfAsteroid(-1);
         Destroy(gameObject, animator.GetCurrentAnimatorStateInfo(0).length);
     }
 
@@ -74,14 +75,15 @@ public class Asteroid : MonoBehaviour
         if (collider.gameObject.CompareTag("Player"))
         {
             AsteroidsPlayerController spaceship = collider.GetComponent<AsteroidsPlayerController>();
-            if (spaceship.CurrentState == AsteroidsPlayerController.State.Active) 
+            if (spaceship.CurrentState == AsteroidsPlayerController.State.Active && !hasExploded) 
             {
                 StartCoroutine(spaceship.KaboomToDeath());
             }
         }
 
-        if (collider.gameObject.CompareTag("Bullet"))
+        if (collider.gameObject.CompareTag("Bullet") && !hasExploded)
         {
+            hasExploded = true;
             BreakAsteroid();
         }
     }

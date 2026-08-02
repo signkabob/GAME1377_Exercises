@@ -78,6 +78,7 @@ public class AsteroidSpawner : MonoBehaviour
     /// <param name="size">the size of the spawn</param>
     public void SpawnAsteroid(Vector3 position, Asteroid.AsteroidSize size)
     {
+        scoreManager.updateNumOfAsteroid(1);
         GameObject asteroidPrefab = AsteroidPrefabs[(int) size];
         Asteroid asteroidSpawn = Instantiate(asteroidPrefab, position, asteroidPrefab.transform.rotation).GetComponent<Asteroid>();
         asteroidSpawn.SetAsteroidSpawner(this);

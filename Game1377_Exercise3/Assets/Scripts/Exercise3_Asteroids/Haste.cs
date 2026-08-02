@@ -20,5 +20,6 @@ public class Haste : PowerUp
         spaceship.PowerMultiplier = hasteMultiplier;
         yield return new WaitForSeconds(hasteTime);
         spaceship.PowerMultiplier = 1.0f;
+        Destroy(gameObject);
     }
 }

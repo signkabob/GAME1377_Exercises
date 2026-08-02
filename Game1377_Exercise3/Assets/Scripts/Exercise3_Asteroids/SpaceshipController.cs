@@ -1,7 +1,7 @@
 /*
  * Excercise 03.3: SpaceshipController.cs
  * Name: Ka Bo Cheung
- * Date: 07/20/2026
+ * Date: 08/01/2026
  * Course: GAME-1377-001
  * 
  * Script for the spaceship to thrust forward, change its rotation, and fire bullets
@@ -65,7 +65,7 @@ public class AsteroidsPlayerController : MonoBehaviour
     void Update()
     {
         HandlePause();
-        if (CurrentState != State.Dead)
+        if (CurrentState != State.Dead && !GameManager.Instance.IsGameOver)
         {
             rotationInput = Input.GetAxis("Horizontal");
             thrustInput = Input.GetAxis("Vertical");

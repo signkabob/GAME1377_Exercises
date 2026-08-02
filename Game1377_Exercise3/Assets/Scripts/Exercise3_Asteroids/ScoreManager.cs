@@ -7,6 +7,7 @@ public class ScoreManager : MonoBehaviour
 {
     public int Score { get; set; } = 0;
     public int NumOfLives { get; set; } = 3;
+    public int NumOfAsteroids { get; set; } = 0;
 
     [SerializeField] private int[] sizePoints = { 100, 50, 20 }; // score points for { Small, Medium, Large }
 
@@ -31,5 +32,14 @@ public class ScoreManager : MonoBehaviour
     {
         NumOfLives += num;
         hud.UpdateLives(NumOfLives);
+    }
+
+    public void updateNumOfAsteroid(int num)
+    {
+        NumOfAsteroids += num;
+        if (NumOfAsteroids <= 0)
+        {
+            GameManager.Instance.TriggerGameOver();
+        }
     }
 }
